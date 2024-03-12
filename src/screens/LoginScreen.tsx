@@ -4,16 +4,11 @@ import { ReactElement } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useDispatch, useSelector } from "react-redux";
-import { register } from "../store/slices/authSlice";
 import { RootState } from "../store/store";
-import { User } from "../types/User";
+import { LoginUser } from "../types/User";
 import { FormInputStyle } from "../components/inputs/PrimaryInput/style";
 import { PrimaryTitle } from "../components/texts/PrimaryTitle/style";
 import PrimaryButton from "../components/buttons/PrimaryButton/index";
-import {
-  ButtonContainerStyle,
-  ButtonTextStyle,
-} from "../components/buttons/PrimaryButton/style";
 import LogoSvg from "../components/svg/LogoSvg";
 
 const schema = yup
@@ -34,7 +29,7 @@ export default function LoginScreen({
     setError,
     formState: { errors },
     handleSubmit,
-  } = useForm<User>({
+  } = useForm<LoginUser>({
     defaultValues: {
       email: "",
       password: "",
@@ -48,7 +43,7 @@ export default function LoginScreen({
     (state: RootState) => state.auth
   );
 
-  function submitForm(data: User) {
+  function submitForm(data: LoginUser) {
     console.log(data);
   }
 
