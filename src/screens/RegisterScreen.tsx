@@ -6,7 +6,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useDispatch, useSelector } from "react-redux";
 import { register } from "../store/slices/authSlice";
 import { RootState } from "../store/store";
-import { User } from "../types/User";
+import { RegisterUser } from "../types/User";
 import { FormInputStyle } from "../components/inputs/PrimaryInput/style";
 import { PrimaryTitle } from "../components/texts/PrimaryTitle/style";
 import PrimaryButton from "../components/buttons/PrimaryButton/index";
@@ -16,15 +16,13 @@ import {
 } from "../components/buttons/PrimaryButton/style";
 import LogoSvg from "../components/svg/LogoSvg";
 
-const schema = yup
-  .object()
-  .shape({
-    email: yup.string().email().required(),
-    password: yup.string().required(),
-  })
-  .required();
+const schema = yup.object().shape({
+  email: yup.string().email().required(),
+  password: yup.string().required(),
+  confirmPassword: yup.string().required(),
+});
 
-export default function LoginScreen({
+export default function RegisterScreen({
   navigation,
 }: {
   navigation: any;
@@ -34,10 +32,11 @@ export default function LoginScreen({
     setError,
     formState: { errors },
     handleSubmit,
-  } = useForm<User>({
+  } = useForm<RegisterUser>({
     defaultValues: {
       email: "",
       password: "",
+      confirmPassword: "",
     },
     resolver: yupResolver(schema),
   });
@@ -48,14 +47,14 @@ export default function LoginScreen({
     (state: RootState) => state.auth
   );
 
-  function submitForm(data: User) {
+  function submitForm(data: RegisterUser) {
     console.log(data);
   }
 
   return (
     <View style={styles.container}>
       <LogoSvg />
-      <PrimaryTitle>Log in</PrimaryTitle>
+      <PrimaryTitle>Sign up</PrimaryTitle>
       <View>
         <FormInputStyle
           placeholder="Enter your email"
@@ -65,13 +64,14 @@ export default function LoginScreen({
           placeholder="Enter your password"
           placeholderTextColor="grey"
         />
+        <FormInputStyle
+          placeholder="Confirm your password"
+          placeholderTextColor="grey"
+        />
         <PrimaryButton onPress={handleSubmit(submitForm)} text={"Submit"} />
-        <Text>Don't have an account yet ?</Text>
-        <Text
-          style={styles.link}
-          onPress={() => navigation.navigate("Register")}
-        >
-          Register here
+        <Text>Already have an account ?</Text>
+        <Text style={styles.link} onPress={() => navigation.navigate("Login")}>
+          Log in here
         </Text>
       </View>
     </View>
