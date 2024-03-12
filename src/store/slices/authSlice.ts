@@ -56,7 +56,7 @@ export const authSlice = createSlice({
     });
     builder.addCase(register.rejected, (state, { payload }) => {
       state.loading = false;
-      state.error = payload as string;
+      state.error = payload as string | null;
     });
   },
 });

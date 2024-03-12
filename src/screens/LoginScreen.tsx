@@ -1,5 +1,5 @@
 import * as yup from "yup";
-import { View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { ReactElement } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -14,6 +14,7 @@ import {
   ButtonContainerStyle,
   ButtonTextStyle,
 } from "../components/buttons/PrimaryButton/style";
+import LogoSvg from "../components/svg/LogoSvg";
 
 const schema = yup
   .object()
@@ -48,10 +49,22 @@ export default function LoginScreen(): ReactElement {
   }
 
   return (
-    <View>
-      <FormInputStyle />
-      <FormInputStyle />
+    <View style={styles.container}>
+      <LogoSvg />
+      <FormInputStyle placeholder="Enter email" placeholderTextColor="grey" />
+      <FormInputStyle
+        placeholder="Enter password"
+        placeholderTextColor="grey"
+      />
       <PrimaryButton onPress={handleSubmit(submitForm)} text={"Submit"} />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});

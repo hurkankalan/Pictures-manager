@@ -1,6 +1,4 @@
 import axios from "axios";
-import { useSelector } from "react-redux";
-import { RootState } from "../store/store";
 
 const AUTH_TOKEN = "";
 

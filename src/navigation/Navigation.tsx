@@ -11,7 +11,7 @@ import LoginScreen from "../screens/LoginScreen";
 
 const Tab = createBottomTabNavigator();
 
-export default function PrivateNavigation(): ReactNode {
+export default function Navigation(): ReactNode {
   const token = useSelector((state: RootState) => state.auth.token);
 
   return token ? (
