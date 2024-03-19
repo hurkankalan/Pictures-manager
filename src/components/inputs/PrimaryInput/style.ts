@@ -8,5 +8,4 @@ export const FormInputStyle = styled.TextInput<{ color?: string }>`
     margin: 10px auto 10px auto;
     padding-left: 10px;
     border: 1px solid ${(props) => props.color || '#B1B1B1'};
-    
 `;
