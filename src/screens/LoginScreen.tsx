@@ -44,7 +44,8 @@ export default function LoginScreen({
   );
 
   function submitForm(data: LoginUser) {
-    console.log(data);
+
+    navigation.navigate("Gallery");
   }
 
   return (

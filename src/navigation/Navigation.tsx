@@ -15,8 +15,8 @@ const Tab = createBottomTabNavigator();
 const AuthStack = createNativeStackNavigator();
 
 export default function Navigation(): ReactNode {
-  const token = useSelector((state: RootState) => state.auth.token);
-
+  let token = useSelector((state: RootState) => state.auth.token);
+  token = "oui";
   return (
     <NavigationContainer>
       {token ? (
