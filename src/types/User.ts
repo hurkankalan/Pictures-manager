@@ -12,7 +12,6 @@ export type RegisterUser = {
 export type InitialUserState = {
   user: null | string;
   token: null | string;
-  refreshToken: null | string;
   loading: boolean;
   success: boolean;
   error: null | string;

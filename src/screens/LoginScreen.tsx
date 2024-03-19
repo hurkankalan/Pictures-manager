@@ -39,10 +39,6 @@ export default function LoginScreen({
 
   const dispatch = useDispatch();
 
-  const { loading, error, success } = useSelector(
-    (state: RootState) => state.auth
-  );
-
   function submitForm(data: LoginUser) {
     console.log(data);
   }
@@ -78,7 +74,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    gap: 50,
   },
   link: {
     textAlign: "center",
