@@ -21,3 +21,9 @@ export const ManageSuccess: React.FC<Props> = ({success, successMessage}) => {
         return <PrimaryTextStyle textColor={'green'}>{successMessage}</PrimaryTextStyle>;
     }
 };
+
+export const PrimaryText: React.FC<Props> = () => {
+    return (
+        <PrimaryTextStyle textColor={'black'}/>
+    );
+}

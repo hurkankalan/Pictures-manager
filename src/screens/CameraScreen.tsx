@@ -1,43 +1,51 @@
-import { Camera, CameraType } from 'expo-camera';
 import { useState } from 'react';
-import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import {FormInputStyle} from "../components/inputs/PrimaryInput/style";
+import {Button, Modal, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {CameraContainerStyle} from "../components/containers/PrimaryContainer/style";
+import * as ImagePicker from 'expo-image-picker';
+import {ViewStyle} from "../components/modals/AddAlbum/style";
 
 export default function App() {
-  const [type, setType] = useState(CameraType.back);
-  const [permission, requestPermission] = Camera.useCameraPermissions();
+    const [imageUri, setImageUri] = useState('');
+    const [modalVisible, setModalVisible] = useState(true);
 
-  if (permission?.status === 'undetermined') {
-    return (
-      <CameraContainerStyle>
-        <Text>Requesting camera permission</Text>
-        <Button title="Request permission" onPress={() => requestPermission()} />
-      </CameraContainerStyle>
-    );
-  }
+    const openImagePicker = async (useCamera: boolean) => {
+        let result;
 
-    if (permission?.status !== 'granted') {
-        return (
-          <CameraContainerStyle>
-              <Text>Camera permission not granted</Text>
-          </CameraContainerStyle>
-        );
-    }
+        if (useCamera) {
+            result = await ImagePicker.launchCameraAsync({
+                allowsEditing: true,
+                aspect: [4, 3],
+                quality: 1,
+            });
+        } else {
+            result = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                allowsEditing: true,
+                aspect: [4, 3],
+                quality: 1,
+            });
+        }
 
-  function toggleCameraType() {
-    setType(current => (current === CameraType.back ? CameraType.front : CameraType.back));
-  }
+        if (!result.canceled && 'uri' in result) {
+            setImageUri(result.uri as string);
+        }
+    };
 
   return (
       <CameraContainerStyle>
-        <Camera style={{ flex: 1 }} type={type}>
-          <CameraContainerStyle>
-            <TouchableOpacity onPress={toggleCameraType}>
-              <FormInputStyle>Flip Camera</FormInputStyle>
-            </TouchableOpacity>
-          </CameraContainerStyle>
-        </Camera>
+          <Modal
+              animationType="slide"
+              transparent={false}
+              visible={modalVisible}
+              onRequestClose={() => {
+                  setModalVisible(!modalVisible);
+              }}>
+              <ViewStyle>
+                  <Button title="Take a Picture" onPress={() => openImagePicker(true)}/>
+                  <Button title="Choose from Gallery" onPress={() => openImagePicker(false)}/>
+                  <Button title="Cancel" onPress={() => setModalVisible(false)}/>
+              </ViewStyle>
+          </Modal>
       </CameraContainerStyle>
   );
 }
