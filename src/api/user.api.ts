@@ -10,7 +10,7 @@ export const registerUser = async (email: string, password: string) => {
 };
 
 export const loginUser = async (email: string, password: string) => {
-  const response = await axiosInstance.post("/login", {
+  const response = await axiosInstance.post("/login_check", {
     email,
     password,
   });
