@@ -16,7 +16,7 @@ export interface PhotoListingResponse {
     photos: PhotoResponse[];
 }
 
-export const listPhoto = async (includeShared: boolean | null, search: string | null) => {
+export const listPhoto = async (includeShared: boolean | null = null, search: string | null = null) => {
     const url = "/photos"
     + (includeShared || search) ? "?" : ''
     + includeShared ? 'include_shared=true&' : ''
