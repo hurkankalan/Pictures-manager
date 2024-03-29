@@ -1,4 +1,4 @@
-import axiosInstance, {axiosFiles} from "./index.api";
+import axiosInstance, {API_URL, axiosFiles} from "./index.api";
 
 export interface PhotoResponse {
     id: number;
@@ -40,9 +40,9 @@ export const listPhotosByLabelName = async (labelName: string) => {
 };
 
 export const getPhotoFile = async (photoId: number) => {
-    const response = await axiosInstance.get(`/photos/file/${photoId}`);
-
-    return response.data;
+    const response = await fetch(`${API_URL}/api/photos/file/${photoId}`)
+    const blob = await response.blob();
+    return URL.createObjectURL(blob);
 };
 
 const buildFormData = async (imageUri: string, labels: string[] | null) => {
