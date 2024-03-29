@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const AUTH_TOKEN = "";
+// const AUTH_TOKEN = "myFakeToken";
 
 const axiosInstance = axios.create({
   baseURL: "http://localhost:8000/api/",
@@ -9,7 +9,7 @@ const axiosInstance = axios.create({
   },
 });
 
-axiosInstance.defaults.headers.common["Authorization"] = AUTH_TOKEN;
-axiosInstance.defaults.timeout = 3000;
+// axiosInstance.defaults.headers.common["Authorization"] = "Bearer" + AUTH_TOKEN;
+// axiosInstance.defaults.timeout = 10000;
 
 export default axiosInstance;
