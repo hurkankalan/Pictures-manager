@@ -3,13 +3,14 @@ import { StyleSheet, View, Text } from "react-native";
 import { ReactElement } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../store/store";
+import { useDispatch } from "react-redux";
 import { LoginUser } from "../types/User";
-import { FormInputStyle } from "../components/inputs/PrimaryInput/style";
 import { PrimaryTitle } from "../components/texts/PrimaryTitle/style";
 import PrimaryButton from "../components/buttons/PrimaryButton/index";
 import LogoSvg from "../components/svg/LogoSvg";
+import { Input } from "./RegisterScreen";
+import { loginUser } from "../store/slices/authSlice";
+import { AppDispatch } from "../store/store";
 
 const schema = yup
   .object()
@@ -25,7 +26,7 @@ export default function LoginScreen({
   navigation: any;
 }): ReactElement {
   const {
-    register,
+    control,
     setError,
     formState: { errors },
     handleSubmit,
@@ -37,10 +38,10 @@ export default function LoginScreen({
     resolver: yupResolver(schema),
   });
 
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
 
   function submitForm(data: LoginUser) {
-    console.log(data);
+    dispatch(loginUser(data));
   }
 
   return (
@@ -48,14 +49,14 @@ export default function LoginScreen({
       <LogoSvg />
       <PrimaryTitle>Log in</PrimaryTitle>
       <View>
-        <FormInputStyle
-          placeholder="Enter your email"
-          placeholderTextColor="grey"
-        />
-        <FormInputStyle
+        <Input control={control} name="email" placeholder="Enter your email" />
+        {errors.email && <Text>{errors.email.message}</Text>}
+        <Input
+          control={control}
+          name="password"
           placeholder="Enter your password"
-          placeholderTextColor="grey"
         />
+        {errors.password && <Text>{errors.password.message}</Text>}
         <PrimaryButton onPress={handleSubmit(submitForm)} text={"Submit"} />
         <Text>Don't have an account yet ?</Text>
         <Text

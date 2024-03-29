@@ -39,8 +39,6 @@ export default function RegisterScreen({
     control,
     setError,
     formState: { errors },
-    clearErrors,
-    reset,
     handleSubmit,
   } = useForm<RegisterUser>({
     defaultValues: {
@@ -52,7 +50,7 @@ export default function RegisterScreen({
 
   const dispatch: AppDispatch = useDispatch();
 
-  async function submitForm(data: RegisterUser) {
+  function submitForm(data: RegisterUser) {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/i;
 
     if (!data.email) {
@@ -85,9 +83,6 @@ export default function RegisterScreen({
     if (Object.keys(errors).length === 0) {
       dispatch(registerUser(data));
     }
-
-    clearErrors();
-    reset();
   }
 
   return (
