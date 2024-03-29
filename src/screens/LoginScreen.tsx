@@ -42,6 +42,8 @@ export default function LoginScreen({
 
   function submitForm(data: LoginUser) {
     dispatch(loginUser(data));
+
+    navigation.navigate("Gallery");
   }
 
   return (

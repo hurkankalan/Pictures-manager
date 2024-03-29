@@ -2,6 +2,8 @@ import { ItemContainerStyle } from "../components/containers/PrimaryContainer/st
 import { ScrollItemContainerStyle } from "../components/containers/PrimaryScrollContainer/style";
 import Album from "../components/buttons/Album";
 import { AddAlbum } from "../components/buttons/AddAlbum";
+import AddAlbumModal from "../components/modals/AddAlbum";
+import {useState} from "react";
 
 interface DataItem {
   id: number;
@@ -18,23 +20,42 @@ const data: DataItem[] = [
 ];
 
 const renderItem: any = ({ item }: { item: DataItem }) => (
-  <Album
-    title={item.title}
-    onPress={() => console.log("test")}
-    image={require("../../assets/images/album_icon.png")}
-  />
+    <Album
+        title={item.title}
+        onPress={() => console.log("test")}
+        image={require("../../assets/images/album_icon.png")}
+    />
 );
 
 export default function GalleryScreen(items: any) {
-  return (
-    <ItemContainerStyle>
-      <ScrollItemContainerStyle
-        data={data}
-        renderItem={renderItem}
-        keyExtractor={items.id}
-        numColumns={2}
-      />
-      <AddAlbum onPress={() => console.log("test")} />
-    </ItemContainerStyle>
-  );
+    const [modalVisible, setModalVisible] = useState(false);
+
+    const displayAddAlbumModal = () => {
+        console.log(modalVisible);
+
+        setModalVisible(true);
+
+        console.log(modalVisible);
+    }
+
+    const closeModal = () => {
+        setModalVisible(false);
+    }
+
+    return (
+        <ItemContainerStyle>
+          <ScrollItemContainerStyle
+            data={data}
+            renderItem={renderItem}
+            keyExtractor={items.id}
+            numColumns={2}
+          />
+          <AddAlbum onPress={() => displayAddAlbumModal()} />
+            {
+                modalVisible && (
+                    <AddAlbumModal modalVisible={modalVisible} setModalVisible={setModalVisible} />
+                )
+            }
+        </ItemContainerStyle>
+    );
 }
