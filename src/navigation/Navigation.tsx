@@ -49,9 +49,6 @@ export default function Navigation(): ReactNode {
             />
             <Tab.Screen name="Settings" component={SettingsScreen} />
           </Tab.Navigator>
-          <AuthStack.Navigator screenOptions={{ headerShown: false }}>
-            <AuthStack.Screen name="Profile" component={ProfileScreen} />
-          </AuthStack.Navigator>
         </>
       ) : (
         <AuthStack.Navigator
