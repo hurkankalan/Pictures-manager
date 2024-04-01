@@ -65,7 +65,7 @@ export default function LoginScreen({
           style={styles.link}
           onPress={() => navigation.navigate("Register")}
         >
-          Register here
+          Register hee
         </Text>
       </View>
     </View>
