@@ -2,61 +2,64 @@ import { ItemContainerStyle } from "../components/containers/PrimaryContainer/st
 import { ScrollItemContainerStyle } from "../components/containers/PrimaryScrollContainer/style";
 import Album from "../components/buttons/Album";
 import { AddAlbum } from "../components/buttons/AddAlbum";
+import { useDispatch, useSelector } from "react-redux";
+import {useEffect, useState} from "react";
 import AddAlbumModal from "../components/modals/AddAlbum";
-import { useState } from "react";
 
-interface DataItem {
+export interface DataItem {
   id: number;
-  title: string;
+  name: string;
 }
 
 /**
  * @todo replace with real data
  */
 const data: DataItem[] = [
-  { id: 1, title: "Élément 1" },
-  { id: 2, title: "Élément 2" },
-  { id: 3, title: "Élément 3" },
+  { id: 1, name: "Élément 1" },
+  { id: 2, name: "Élément 2" },
+  { id: 3, name: "Élément 3" },
 ];
 
-const renderItem: any = ({ item }: { item: DataItem }) => (
-  <Album
-    title={item.title}
-    onPress={() => console.log("test")}
-    image={require("../../assets/images/album_icon.png")}
-  />
-);
-
 export default function GalleryScreen(items: any) {
-  const [modalVisible, setModalVisible] = useState(false);
+    const selectedAlbum = useSelector((state: any) => state.album.selectedAlbum);
+    const [isAlbumSelected, setIsAlbumSelected] = useState<boolean>(false);
+    const [modalVisible, setModalVisible] = useState(false);
 
-  const displayAddAlbumModal = () => {
-    console.log(modalVisible);
+    useEffect(() => {
+        if (selectedAlbum.length === 0) {
+            setIsAlbumSelected(false);
+        } else {
+            setIsAlbumSelected(true);
+        }
+    }, [selectedAlbum]);
 
-    setModalVisible(true);
-
-    console.log(modalVisible);
-  };
-
-  const closeModal = () => {
-    setModalVisible(false);
-  };
-
-  return (
-    <ItemContainerStyle>
-      <ScrollItemContainerStyle
-        data={data}
-        renderItem={renderItem}
-        keyExtractor={items.id}
-        numColumns={2}
-      />
-      <AddAlbum onPress={() => displayAddAlbumModal()} />
-      {modalVisible && (
-        <AddAlbumModal
-          modalVisible={modalVisible}
-          setModalVisible={setModalVisible}
+    const renderItem: any = ({ item }: { item: DataItem }) => (
+        <Album
+            id={item.id}
+            name={item.name}
+            onPress={() => console.log("test")}
+            image={require("../../assets/images/album_icon.png")}
         />
-      )}
-    </ItemContainerStyle>
-  );
+    );
+
+    const displayAddAlbumModal = () => {
+        setModalVisible(true);
+    }
+
+    return (
+        <ItemContainerStyle>
+          <ScrollItemContainerStyle
+            data={data}
+            renderItem={renderItem}
+            keyExtractor={items.id}
+            numColumns={2}
+          />
+          <AddAlbum onPress={() => displayAddAlbumModal()} isAlbumSelected={isAlbumSelected}/>
+            {
+                modalVisible && (
+                    <AddAlbumModal modalVisible={modalVisible} setModalVisible={setModalVisible} />
+                )
+            }
+        </ItemContainerStyle>
+    );
 }
