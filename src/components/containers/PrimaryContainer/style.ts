@@ -11,3 +11,11 @@ export const ItemContainerStyle = styled.View`
     width: 100%;
     height: 100%;
 `;
+
+export const CameraContainerStyle = styled.View`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+`;
