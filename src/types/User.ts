@@ -1,3 +1,9 @@
+export type ChangePassword = {
+  email: string;
+  oldPassword: string;
+  newPassword: string;
+};
+
 export type LoginUser = {
   email: string;
   password: string;

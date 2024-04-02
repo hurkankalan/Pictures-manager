@@ -8,6 +8,15 @@ export const register = async (email: string, password: string) => {
 
   return response.data;
 };
+export const changeUserPassword = async (email: string, oldPassword: string, newPassword: string) => {
+  const response = await axiosInstance.post("/password", {
+    email,
+    oldPassword,
+    newPassword
+  });
+
+  return response.data;
+};
 
 export const login = async (email: string, password: string) => {
   const response = await axiosInstance.post("/login", {

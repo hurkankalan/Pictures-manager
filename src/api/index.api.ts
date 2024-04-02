@@ -3,7 +3,7 @@ import axios from "axios";
 // const AUTH_TOKEN = "myFakeToken";
 
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:8000/api/",
+  baseURL: "http://10.22.255.200:8080/api/",
   headers: {
     "Content-Type": "application/json",
   },
