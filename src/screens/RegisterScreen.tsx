@@ -82,6 +82,8 @@ export default function RegisterScreen({
 
     if (Object.keys(errors).length === 0) {
       dispatch(registerUser(data));
+
+      // navigation.navigate("Login");
     }
   }
 
