@@ -21,13 +21,7 @@ export const loginUser = createAsyncThunk(
   "auth/login",
   async ({ email, password }: LoginUser, { rejectWithValue }) => {
     try {
-      console.log("response")
-
-      const response = await login(email, password);
-
-      console.log({response})
-
-      return response.data;
+      return await login(email, password);
     } catch (error: any) {
       // return rejectWithValue(error.message);
       alert(error.response.data);
@@ -81,10 +75,9 @@ export const authSlice = createSlice({
       state.error = null;
     });
     builder.addCase(loginUser.fulfilled, (state, { payload }) => {
-      console.log({payload})
       state.loading = false;
       state.success = true;
-      state.token = payload;
+      state.token = payload.token;
     });
     builder.addCase(loginUser.rejected, (state, { payload }) => {
       state.loading = false;
