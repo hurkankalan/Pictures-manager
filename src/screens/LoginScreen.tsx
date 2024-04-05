@@ -3,14 +3,14 @@ import { StyleSheet, View, Text } from "react-native";
 import { ReactElement } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useDispatch } from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import { LoginUser } from "../types/User";
 import { PrimaryTitle } from "../components/texts/PrimaryTitle/style";
 import PrimaryButton from "../components/buttons/PrimaryButton/index";
 import LogoSvg from "../components/svg/LogoSvg";
 import { Input } from "./RegisterScreen";
 import { loginUser } from "../store/slices/authSlice";
-import { AppDispatch } from "../store/store";
+import {AppDispatch, RootState} from "../store/store";
 
 const schema = yup
   .object()
@@ -39,12 +39,12 @@ export default function LoginScreen({
   });
 
   const dispatch: AppDispatch = useDispatch();
-
+  const token = useSelector((state: RootState) => state.auth.token)
   function submitForm(data: LoginUser) {
     dispatch(loginUser(data));
-
-    navigation.navigate("Gallery");
+    //navigation.navigate("Gallery");
   }
+  console.log({token})
 
   return (
     <View style={styles.container}>

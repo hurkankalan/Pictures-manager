@@ -8,8 +8,6 @@ export const registerUser = createAsyncThunk(
     try {
       const response = await register(email, password);
 
-      console.log(response);
-
       return response.data;
     } catch (error: any) {
       // return rejectWithValue(error.message);
@@ -23,9 +21,7 @@ export const loginUser = createAsyncThunk(
   "auth/login",
   async ({ email, password }: LoginUser, { rejectWithValue }) => {
     try {
-      const response = await login(email, password);
-
-      return response.data;
+      return await login(email, password);
     } catch (error: any) {
       // return rejectWithValue(error.message);
       alert(error.response.data);
@@ -81,7 +77,6 @@ export const authSlice = createSlice({
     builder.addCase(loginUser.fulfilled, (state, { payload }) => {
       state.loading = false;
       state.success = true;
-      state.user = payload.user;
       state.token = payload.token;
     });
     builder.addCase(loginUser.rejected, (state, { payload }) => {

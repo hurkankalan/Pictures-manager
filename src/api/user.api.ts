@@ -25,9 +25,9 @@ export const changeUserPassword = async (
 };
 
 export const login = async (email: string, password: string) => {
-  const response = await axiosInstance.post("/login", {
+  const response = await axiosInstance.post("/login_check", {
     email,
-    password,
+    password
   });
 
   return response.data;
