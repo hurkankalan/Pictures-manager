@@ -18,6 +18,7 @@ import {
     setUpdateModalVisible
 } from "../../../store/slices/albumSlice";
 import ShareAlbum from "../../modals/ShareAlbum";
+import RemoveAlbum from "../../modals/RemoveAlbum";
 
 interface AddAlbumProps {
     isAlbumSelected: boolean;
@@ -52,6 +53,12 @@ export const AddAlbum: React.FC<AddAlbumProps> = ({ isAlbumSelected }: AddAlbumP
     const displayShareAlbumModal = () => {
         return (
             <ShareAlbum />
+        );
+    }
+
+    const displayRemoveAlbumModal = () => {
+        return (
+            <RemoveAlbum />
         );
     }
 
@@ -90,6 +97,9 @@ export const AddAlbum: React.FC<AddAlbumProps> = ({ isAlbumSelected }: AddAlbumP
             }
             {
                 isShareModalVisible && displayShareAlbumModal()
+            }
+            {
+                isRemoveModalVisible && displayRemoveAlbumModal()
             }
         </MenuProvider>
     );
