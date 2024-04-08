@@ -1,47 +1,48 @@
-import React, {useState} from "react";
-import {Modal, TouchableWithoutFeedback, View} from 'react-native';
-import {ModalContainerStyle, ViewStyle} from "./style";
-import {FormInputStyle} from "../../inputs/PrimaryInput/style";
-import PrimaryButton from "../../buttons/PrimaryButton";
-import {AlbumImageStyle} from "../../buttons/Album/style";
+import React, { useState } from 'react';
+import {Modal, TouchableWithoutFeedback, View} from "react-native";
+import {ModalContainerStyle} from "../AddAlbum/style";
 import {PrimaryTitle} from "../../texts/PrimaryTitle/style";
+import {AlbumImageStyle} from "../../buttons/Album/style";
+import {FormInputStyle} from "../../inputs/PrimaryInput/style";
 import {ManageError} from "../../texts/PrimaryText";
+import PrimaryButton from "../../buttons/PrimaryButton";
 import {useDispatch, useSelector} from "react-redux";
-import {setAddModalVisible} from "../../../store/slices/albumSlice";
+import {setUpdateModalVisible} from "../../../store/slices/albumSlice";
 
-function AddAlbumModal() {
+export const UpdateAlbum: React.FC = () => {
     const dispatch = useDispatch();
-    const isModalVisible = useSelector((state: any) => state.album.isAddModalVisible);
+    const modalVisible = useSelector((state: any) => state.album.isUpdateModalVisible);
     const [albumName, setAlbumName] = useState('');
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
 
-    const handleAddAlbum = () => {
+    const handleUpdateAlbum = () => {
         if (albumName === '') {
             setError(true);
             setErrorMessage('Album name is required');
             return;
         }
+
         // @todo call api to add album
-        console.log('Add Album');
+        console.log('Update Album');
     };
 
     const closeModal = () => {
-        dispatch(setAddModalVisible(false));
-    };
+        dispatch(setUpdateModalVisible(false));
+    }
 
     return (
         <Modal
             animationType="slide"
             transparent={true}
-            visible={isModalVisible}
+            visible={modalVisible}
             onRequestClose={() => closeModal()}
         >
             <TouchableWithoutFeedback onPress={() => closeModal()}>
                 <View style={{flex: 1}}>
                     <TouchableWithoutFeedback onPress={(event) => event.stopPropagation()}>
                         <ModalContainerStyle>
-                            <PrimaryTitle>Add Album</PrimaryTitle>
+                            <PrimaryTitle>Update Album</PrimaryTitle>
                             <AlbumImageStyle
                                 source={require("../../../../assets/images/album_icon.png")}
                             />
@@ -54,8 +55,8 @@ function AddAlbumModal() {
                                 errorMessage={errorMessage}
                             />
                             <PrimaryButton
-                                onPress={() => handleAddAlbum()}
-                                text={"Create"}
+                                onPress={() => handleUpdateAlbum()}
+                                text={'Update'}
                             />
                         </ModalContainerStyle>
                     </TouchableWithoutFeedback>
@@ -65,4 +66,4 @@ function AddAlbumModal() {
     );
 }
 
-export default AddAlbumModal;
+export default UpdateAlbum;
