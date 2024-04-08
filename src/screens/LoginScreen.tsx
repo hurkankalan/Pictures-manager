@@ -39,12 +39,10 @@ export default function LoginScreen({
   });
 
   const dispatch: AppDispatch = useDispatch();
-  const token = useSelector((state: RootState) => state.auth.token)
+
   function submitForm(data: LoginUser) {
     dispatch(loginUser(data));
-    //navigation.navigate("Gallery");
   }
-  console.log({token})
 
   return (
     <View style={styles.container}>
