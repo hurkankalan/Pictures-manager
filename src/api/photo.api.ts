@@ -1,4 +1,4 @@
-import axiosInstance, {API_URL, axiosFiles} from "./index.api";
+import {API_URL, axiosFiles, axiosInstance} from "./index.api";
 
 export interface PhotoResponse {
     id: number;
@@ -45,19 +45,26 @@ export const getPhotoFile = async (photoId: number) => {
     return URL.createObjectURL(blob);
 };
 
+const fileFromPath = async (path:string)=>{
+    const file = await fetch(path);
+    const blob = await file.blob();
+
+    const filename = path.split('/').pop() as string;
+
+    const extension = /\.(\w+)$/.exec(filename);
+    const type = extension ? `image/${extension[1]}` : `image`;
+
+    return new File([blob], filename, {type});
+}
+
 const buildFormData = async (imageUri: string, labels: string[] | null) => {
-    // à vérifier que les headers sont bons et que ça enregistre bien la photo sur le serveur...
-
-    const blob = await fetch(imageUri)
-        .then(response => response.blob());
-
-    const filename = imageUri.split('/').pop() as string;
-    //const extension = /\.(\w+)$/.exec(filename);
-    //const type = extension ? `image/${extension[1]}` : `image`;
-
     const formData = new FormData();
-    formData.append('file', blob, filename);
-    formData.append('labels', JSON.stringify(labels))
+
+    formData.append('file', await fileFromPath(imageUri));
+
+    if (labels !== null) {
+        formData.append('labels', JSON.stringify(labels))
+    }
 
     return formData;
 }
@@ -65,7 +72,17 @@ const buildFormData = async (imageUri: string, labels: string[] | null) => {
 export const createPhoto = async (imageUri: string, labels: string[] | null = null) => {
         const response = await axiosFiles.post('/photos',
             await buildFormData(imageUri, labels)
-        );
+        )
+        //   .catch(error => {
+        //           if (error.response) {
+        //               console.log('Error response:', error.response);
+        //           } else if (error.request) {
+        //               console.log('Error request:', error.request);
+        //           } else {
+        //               console.log('Error message:', error.message);
+        //           }
+        //       }
+        //   )
 
         return response.data;
     }
