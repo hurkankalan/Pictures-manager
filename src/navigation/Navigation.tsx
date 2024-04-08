@@ -17,7 +17,7 @@ const AuthStack = createNativeStackNavigator();
 
 export default function Navigation(): ReactNode {
   let token = useSelector((state: RootState) => state.auth.token);
-
+  token = "token";
   return (
     <NavigationContainer>
       {token ? (
