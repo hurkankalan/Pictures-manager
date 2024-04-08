@@ -4,7 +4,6 @@ import Album from "../components/buttons/Album";
 import { AddAlbum } from "../components/buttons/AddAlbum";
 import { useDispatch, useSelector } from "react-redux";
 import {useEffect, useState} from "react";
-import AddAlbumModal from "../components/modals/AddAlbum";
 
 export interface DataItem {
   id: number;
@@ -23,7 +22,6 @@ const data: DataItem[] = [
 export default function GalleryScreen(items: any) {
     const selectedAlbum = useSelector((state: any) => state.album.selectedAlbum);
     const [isAlbumSelected, setIsAlbumSelected] = useState<boolean>(false);
-    const [modalVisible, setModalVisible] = useState(false);
 
     useEffect(() => {
         if (selectedAlbum.length === 0) {
@@ -42,10 +40,6 @@ export default function GalleryScreen(items: any) {
         />
     );
 
-    const displayAddAlbumModal = () => {
-        setModalVisible(true);
-    }
-
     return (
         <ItemContainerStyle>
           <ScrollItemContainerStyle
@@ -54,12 +48,7 @@ export default function GalleryScreen(items: any) {
             keyExtractor={items.id}
             numColumns={2}
           />
-          <AddAlbum onPress={() => displayAddAlbumModal()} isAlbumSelected={isAlbumSelected}/>
-            {
-                modalVisible && (
-                    <AddAlbumModal modalVisible={modalVisible} setModalVisible={setModalVisible} />
-                )
-            }
+          <AddAlbum isAlbumSelected={isAlbumSelected}/>
         </ItemContainerStyle>
     );
 }
