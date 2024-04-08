@@ -1,5 +1,5 @@
-import {useState} from 'react';
-import {Button, Modal} from 'react-native';
+import { useState } from 'react';
+import {Button, Modal, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {CameraContainerStyle} from "../components/containers/PrimaryContainer/style";
 import * as ImagePicker from 'expo-image-picker';
 import {ViewStyle} from "../components/modals/AddAlbum/style";
@@ -33,21 +33,21 @@ export default function App() {
         }
     };
 
-    return (
-        <CameraContainerStyle>
-            <Modal
-                animationType="slide"
-                transparent={false}
-                visible={modalVisible}
-                onRequestClose={() => {
-                    setModalVisible(!modalVisible);
-                }}>
-                <ViewStyle>
-                    <Button title="Take a Picture" onPress={() => openImagePicker(true)}/>
-                    <Button title="Choose from Gallery" onPress={() => openImagePicker(false)}/>
-                    <Button title="Cancel" onPress={() => setModalVisible(false)}/>
-                </ViewStyle>
-            </Modal>
-        </CameraContainerStyle>
-    );
+  return (
+      <CameraContainerStyle>
+          <Modal
+              animationType="slide"
+              transparent={false}
+              visible={modalVisible}
+              onRequestClose={() => {
+                  setModalVisible(!modalVisible);
+              }}>
+              <ViewStyle>
+                  <Button title="Take a Picture" onPress={() => openImagePicker(true)}/>
+                  <Button title="Choose from Gallery" onPress={() => openImagePicker(false)}/>
+                  <Button title="Cancel" onPress={() => setModalVisible(false)}/>
+              </ViewStyle>
+          </Modal>
+      </CameraContainerStyle>
+  );
 }

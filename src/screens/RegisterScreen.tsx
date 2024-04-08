@@ -1,21 +1,34 @@
-import * as yup from "yup";
 import { StyleSheet, View, Text } from "react-native";
 import { ReactElement } from "react";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../store/store";
+import { useController, useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../store/store";
+import { registerUser } from "../store/slices/authSlice";
 import { RegisterUser } from "../types/User";
 import { FormInputStyle } from "../components/inputs/PrimaryInput/style";
 import { PrimaryTitle } from "../components/texts/PrimaryTitle/style";
+import { ErrorText } from "../components/texts/ErrorText/style";
 import PrimaryButton from "../components/buttons/PrimaryButton/index";
 import LogoSvg from "../components/svg/LogoSvg";
 
-const schema = yup.object().shape({
-  email: yup.string().email().required(),
-  password: yup.string().required(),
-  confirmPassword: yup.string().required(),
-});
+export const Input = ({ control, name, ...props }: any) => {
+  const { field } = useController({
+    control,
+    defaultValue: "",
+    name,
+  });
+
+  return (
+    <FormInputStyle
+      value={field.value}
+      onChangeText={field.onChange}
+      control={control}
+      name={name}
+      {...props}
+      required
+    />
+  );
+};
 
 export default function RegisterScreen({
   navigation,
@@ -23,7 +36,7 @@ export default function RegisterScreen({
   navigation: any;
 }): ReactElement {
   const {
-    register,
+    control,
     setError,
     formState: { errors },
     handleSubmit,
@@ -33,17 +46,45 @@ export default function RegisterScreen({
       password: "",
       confirmPassword: "",
     },
-    resolver: yupResolver(schema),
   });
 
-  const dispatch = useDispatch();
-
-  const { loading, error, success } = useSelector(
-    (state: RootState) => state.auth
-  );
+  const dispatch: AppDispatch = useDispatch();
 
   function submitForm(data: RegisterUser) {
-    console.log(data);
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/i;
+
+    if (!data.email) {
+      setError("email", { message: "Email is required" });
+      console.log({ errors });
+    }
+
+    if (!data.password) {
+      setError("password", { message: "Password is required" });
+    }
+
+    if (!data.confirmPassword) {
+      setError("confirmPassword", { message: "Confirm your password again" });
+    }
+
+    if (!emailRegex.test(data.email)) {
+      setError("email", { message: "Invalid email format" });
+    }
+
+    if (data.password.length < 6) {
+      setError("password", {
+        message: "Password must be at least 6 characters",
+      });
+    }
+
+    if (data.password !== data.confirmPassword) {
+      setError("confirmPassword", { message: "Passwords must match" });
+    }
+
+    if (Object.keys(errors).length === 0) {
+      dispatch(registerUser(data));
+
+      navigation.navigate("Login");
+    }
   }
 
   return (
@@ -51,18 +92,22 @@ export default function RegisterScreen({
       <LogoSvg />
       <PrimaryTitle>Sign up</PrimaryTitle>
       <View>
-        <FormInputStyle
-          placeholder="Enter your email"
-          placeholderTextColor="grey"
-        />
-        <FormInputStyle
+        <Input control={control} name="email" placeholder="Enter your email" />
+        {errors.email && <ErrorText>{errors.email.message}</ErrorText>}
+        <Input
+          control={control}
+          name="password"
           placeholder="Enter your password"
-          placeholderTextColor="grey"
         />
-        <FormInputStyle
-          placeholder="Confirm your password"
-          placeholderTextColor="grey"
+        {errors.password && <ErrorText>{errors.password.message}</ErrorText>}
+        <Input
+          control={control}
+          name="confirmPassword"
+          placeholder="Enter your password again"
         />
+        {errors.confirmPassword && (
+          <ErrorText>{errors.confirmPassword.message}</ErrorText>
+        )}
         <PrimaryButton onPress={handleSubmit(submitForm)} text={"Submit"} />
         <Text>Already have an account ?</Text>
         <Text style={styles.link} onPress={() => navigation.navigate("Login")}>
@@ -78,7 +123,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    gap: 50,
   },
   link: {
     textAlign: "center",

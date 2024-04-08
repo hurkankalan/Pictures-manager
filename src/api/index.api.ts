@@ -1,8 +1,6 @@
 import axios from "axios";
 
-const AUTH_TOKEN = "";
-
-export const API_URL = "http://localhost:8080";
+export const API_URL = "http://192.168.138.222:8080";
 
 const axiosInstance = axios.create({
     baseURL: `${API_URL}/api`,
@@ -20,7 +18,7 @@ export const axiosFiles = axios.create({
 
 export const checkHealth = async () => axios.get(`${API_URL}/health-check`);
 
-axiosInstance.defaults.headers.common["Authorization"] = AUTH_TOKEN;
-//axiosInstance.defaults.timeout = 3000;
-
-export default axiosInstance;
+const updateAxiosInstanceWithToken = (token:string) => {
+  axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+};
+export { axiosInstance, updateAxiosInstanceWithToken };
