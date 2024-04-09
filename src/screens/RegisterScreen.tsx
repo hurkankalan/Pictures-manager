@@ -98,18 +98,20 @@ export default function RegisterScreen({
           control={control}
           name="password"
           placeholder="Enter your password"
+          secureTextEntry={true}
         />
         {errors.password && <ErrorText>{errors.password.message}</ErrorText>}
         <Input
           control={control}
           name="confirmPassword"
           placeholder="Enter your password again"
+          secureTextEntry={true}
         />
         {errors.confirmPassword && (
           <ErrorText>{errors.confirmPassword.message}</ErrorText>
         )}
         <PrimaryButton onPress={handleSubmit(submitForm)} text={"Submit"} />
-        <Text>Already have an account ?</Text>
+        <Text style={styles.centeredText}>Already have an account ?</Text>
         <Text style={styles.link} onPress={() => navigation.navigate("Login")}>
           Log in here
         </Text>
@@ -127,5 +129,11 @@ const styles = StyleSheet.create({
   link: {
     textAlign: "center",
     color: "blue",
+  },
+  centeredText: {
+    textAlign: "center",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
