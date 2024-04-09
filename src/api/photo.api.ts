@@ -45,7 +45,7 @@ export const getPhotoFile = async (photoId: number) => {
     return URL.createObjectURL(blob);
 };
 
-const fileFromPath = async (path:string)=>{
+const fileFromPath = async (path: string) => {
     const file = await fetch(path);
     const blob = await file.blob();
 
@@ -70,23 +70,15 @@ const buildFormData = async (imageUri: string, labels: string[] | null) => {
 }
 
 export const createPhoto = async (imageUri: string, labels: string[] | null = null) => {
+    try {
         const response = await axiosFiles.post('/photos',
             await buildFormData(imageUri, labels)
         )
-        //   .catch(error => {
-        //           if (error.response) {
-        //               console.log('Error response:', error.response);
-        //           } else if (error.request) {
-        //               console.log('Error request:', error.request);
-        //           } else {
-        //               console.log('Error message:', error.message);
-        //           }
-        //       }
-        //   )
-
         return response.data;
+    } catch (error: any) {
+        alert(JSON.stringify(error));
     }
-;
+};
 
 export const createPhotoInAlbum = async (albumId: number, imageUri: string, labels: string[] | null = null) => {
     const response = await axiosFiles.post(`/photos/albums/${albumId}`,

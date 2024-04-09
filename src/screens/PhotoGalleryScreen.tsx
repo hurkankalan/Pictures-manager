@@ -12,11 +12,9 @@ export default function PhotoGalleryScreen(items: any) {
     const renderItem: any = ({ item }: { item: DataItem }) => (
         <Album
             id={item.id}
-            title={item.name}
+            name={item.name}
             onPress={() => console.log("test")}
             image={require("../../assets/images/album_icon.png")}
         />
     );
-
-
 }

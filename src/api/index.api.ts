@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const API_URL = "http://10.22.255.200:8080";
+export const API_URL = "http://192.168.207.150:8080";
 
 const axiosInstance = axios.create({
     baseURL: `${API_URL}/api`,
@@ -19,6 +19,8 @@ export const axiosFiles = axios.create({
 export const checkHealth = async () => axios.get(`${API_URL}/health-check`);
 
 const updateAxiosInstanceWithToken = (token:string) => {
-  axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    axiosFiles.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 };
+
 export { axiosInstance, updateAxiosInstanceWithToken };

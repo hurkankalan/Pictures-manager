@@ -12,15 +12,13 @@ export default function App() {
     useEffect(() => {
         const sendPhoto = async () => {
             if (imageUri !== undefined) {
-                return createPhoto(imageUri);
+                await createPhoto(imageUri);
             }
         };
 
         console.log("imageUri:" + imageUri);
 
-        sendPhoto()
-            .then(console.log)
-            .catch(console.error);
+        sendPhoto();
     }, [imageUri]);
 
     const openImagePicker = async (useCamera: boolean) => {
