@@ -21,10 +21,11 @@ const Photo: React.FC<PhotoProps> = ({photo, onPress}: PhotoProps) => {
     };
 
     useEffect(() => {
-        getPhotoFile(photo.id)
+        getPhotoFile(photo.id, photo.name)
             .then(imageUrl => {
-                setImage(require(imageUrl))
+                setImage(require(imageUrl.uri))
             })
+            .catch(error => alert(error.message))
     }, [photo]);
 
     return (

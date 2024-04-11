@@ -1,4 +1,5 @@
-import {API_URL, axiosFiles, axiosInstance} from "./index.api";
+import {axiosInstance} from "./index.api";
+import * as FileSystem from 'expo-file-system';
 
 export interface PhotoResponse {
     id: number;
@@ -39,53 +40,48 @@ export const listPhotosByLabelName = async (labelName: string) => {
     return response.data;
 };
 
-export const getPhotoFile = async (photoId: number) => {
-    const response = await fetch(`${API_URL}/api/photos/file/${photoId}`)
-    const blob = await response.blob();
-    return URL.createObjectURL(blob);
+export const getPhotoFile = async (photoId: number, fileName: string) => {
+    const apiUrl = axiosInstance.defaults.baseURL;
+    const bearer = axiosInstance.defaults.headers.common['Authorization'];
+
+    return FileSystem.downloadAsync(
+        `${apiUrl}'/photos/file/${photoId}`,
+        `${FileSystem.documentDirectory}/${fileName}`,
+        {
+            headers: {
+                'Authorization': bearer?.toString() || ''
+            }
+        }
+    );
 };
 
-const fileFromPath = async (path: string) => {
-    const file = await fetch(path);
-    const blob = await file.blob();
+const uploadFile = async (url: string, fileUri: string, data: any) => {
+    const api = axiosInstance.defaults.baseURL;
+    const bearer = axiosInstance.defaults.headers.common['Authorization'];
 
-    const filename = path.split('/').pop() as string;
+    const response = await FileSystem.uploadAsync(api + url, fileUri, {
+        fieldName: 'file',
+        httpMethod: 'POST',
+        uploadType: FileSystem.FileSystemUploadType.MULTIPART,
+        parameters: data,
+        headers: {
+            'Authorization': bearer?.toString() || ''
+        }
+    })
+        .then(r => JSON.parse(r.body))
+        .catch(alert);
 
-    const extension = /\.(\w+)$/.exec(filename);
-    const type = extension ? `image/${extension[1]}` : `image`;
-
-    return new File([blob], filename, {type});
-}
-
-const buildFormData = async (imageUri: string, labels: string[] | null) => {
-    const formData = new FormData();
-
-    formData.append('file', await fileFromPath(imageUri));
-
-    if (labels !== null) {
-        formData.append('labels', JSON.stringify(labels))
+    if (response.success === false) {
+        alert(response.reason);
     }
-
-    return formData;
 }
 
 export const createPhoto = async (imageUri: string, labels: string[] | null = null) => {
-    try {
-        const response = await axiosFiles.post('/photos',
-            await buildFormData(imageUri, labels)
-        )
-        return response.data;
-    } catch (error: any) {
-        alert(JSON.stringify(error));
-    }
+    return uploadFile('/photos', imageUri, labels && {'labels': JSON.stringify(labels)});
 };
 
 export const createPhotoInAlbum = async (albumId: number, imageUri: string, labels: string[] | null = null) => {
-    const response = await axiosFiles.post(`/photos/albums/${albumId}`,
-        await buildFormData(imageUri, labels)
-    );
-
-    return response.data;
+    return uploadFile(`/photos/albums/${albumId}`, imageUri, labels && {'labels': JSON.stringify(labels)});
 };
 
 export interface PhotoUpdatePayload {
