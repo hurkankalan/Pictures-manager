@@ -13,7 +13,8 @@ interface PhotoProps {
 }
 
 const Photo: React.FC<PhotoProps> = ({photo, onPress}: PhotoProps) => {
-    const [image, setImage] = useState<ImageSourcePropType | undefined>();
+    // const [image, setImage] = useState<ImageSourcePropType | undefined>();
+    const [image, setImage] = useState<string | undefined>();
     const [selected, setSelected] = useState<boolean>(false);
 
     const handleLongPress = () => {
@@ -23,7 +24,8 @@ const Photo: React.FC<PhotoProps> = ({photo, onPress}: PhotoProps) => {
     useEffect(() => {
         getPhotoFile(photo.id, photo.name)
             .then(imageUrl => {
-                setImage(require(imageUrl.uri))
+                //  setImage(require(imageUrl.uri))
+                setImage(imageUrl.uri)
             })
             .catch(error => alert(error.message))
     }, [photo]);
@@ -35,7 +37,8 @@ const Photo: React.FC<PhotoProps> = ({photo, onPress}: PhotoProps) => {
             selected={selected}
         >
             {image
-                ? <PhotoImageStyle source={image}/>
+                // ? <PhotoImageStyle source={image}/>
+                ? <Text>{image}</Text>
                 : <Text>Loading...</Text>
             }
             <PhotoTitleStyle>{photo.name}</PhotoTitleStyle>
