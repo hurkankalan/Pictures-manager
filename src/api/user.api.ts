@@ -20,7 +20,7 @@ export const changeUserPassword = async (
         alert("Password Changed")
         return response.data;
     } catch (error: any) {
-        if (error=="AxiosError: Request failed with status code 400"){
+        if (error == "AxiosError: Request failed with status code 400") {
             alert("Wrong password")
         }
         console.log("There is an error", error)
@@ -35,4 +35,15 @@ export const login = async (email: string, password: string) => {
         password
     });
     return response.data;
+};
+export const getMe = async () => {
+    try {
+        const response = await axiosInstance.get("/getMe");
+        return response.data;
+    } catch (error: any) {
+        if (error == "AxiosError: Request failed with status code 400") {
+            alert("Wrong password")
+        }
+        console.log("There is an error", error)
+    }
 };
