@@ -10,15 +10,9 @@ export default function App() {
     const [modalVisible, setModalVisible] = useState(true);
 
     useEffect(() => {
-        const sendPhoto = async () => {
-            if (imageUri !== undefined) {
-                await createPhoto(imageUri);
-            }
-        };
-
-        console.log("imageUri:" + imageUri);
-
-        sendPhoto();
+        if (imageUri) {
+            createPhoto(imageUri, ['todo']);
+        }
     }, [imageUri]);
 
     const openImagePicker = async (useCamera: boolean) => {

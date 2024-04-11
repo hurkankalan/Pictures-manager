@@ -55,7 +55,7 @@ export const getPhotoFile = async (photoId: number, fileName: string) => {
     );
 };
 
-const uploadFile = async (url: string, fileUri: string, data: any) => {
+const uploadFile = async (url: string, fileUri: string, body: any) => {
     const api = axiosInstance.defaults.baseURL;
     const bearer = axiosInstance.defaults.headers.common['Authorization'];
 
@@ -63,13 +63,13 @@ const uploadFile = async (url: string, fileUri: string, data: any) => {
         fieldName: 'file',
         httpMethod: 'POST',
         uploadType: FileSystem.FileSystemUploadType.MULTIPART,
-        parameters: data,
+        parameters: body,
         headers: {
             'Authorization': bearer?.toString() || ''
         }
     })
         .then(r => JSON.parse(r.body))
-        .catch(alert);
+        .catch(console.error);
 
     if (response.success === false) {
         alert(response.reason);
