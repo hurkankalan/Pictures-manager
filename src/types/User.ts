@@ -16,6 +16,7 @@ export type RegisterUser = {
 
 export type InitialUserState = {
   user: null | string;
+  userId: null | string;
   token: null | string;
   loading: boolean;
   success: boolean;

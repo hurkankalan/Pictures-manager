@@ -1,6 +1,6 @@
 import * as yup from "yup";
 import {StyleSheet, View, Text} from "react-native";
-import {ReactElement} from "react";
+import {ReactElement, useEffect} from "react";
 import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";
 import {useDispatch, useSelector} from "react-redux";
@@ -9,7 +9,7 @@ import {PrimaryTitle} from "../components/texts/PrimaryTitle/style";
 import PrimaryButton from "../components/buttons/PrimaryButton/index";
 import LogoSvg from "../components/svg/LogoSvg";
 import {Input} from "./RegisterScreen";
-import {loginUser} from "../store/slices/authSlice";
+import {loginUser, getMeUser} from "../store/slices/authSlice";
 import {AppDispatch, RootState} from "../store/store";
 
 const schema = yup
@@ -38,11 +38,27 @@ export default function LoginScreen({
         resolver: yupResolver(schema),
     });
 
-    const dispatch: AppDispatch = useDispatch();
+    /*    const dispatch: AppDispatch = useDispatch();
 
-    function submitForm(data: LoginUser) {
-        dispatch(loginUser(data));
+        function submitForm(data: LoginUser) {
+            dispatch(loginUser(data));
+        }*/
+    const dispatch: AppDispatch = useDispatch();
+    const token = useSelector((state: RootState) => state.auth.token)
+    useEffect(() => {
+        if (token) {
+            dispatch(getMeUser());
+        }
+    }, [dispatch, token]);
+
+    async function submitForm(data: LoginUser) {
+        try {
+            await dispatch(loginUser(data));
+        } catch (error) {
+            console.error("An error occurred:", error);
+        }
     }
+
 
     return (
         <View style={styles.container}>
