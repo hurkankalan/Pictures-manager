@@ -9,7 +9,7 @@ export const PhotoContainerStyle = styled.TouchableOpacity<PhotoContainerProps>`
     display: flex;
     align-content: space-between;
     border-radius: 10px;
-    width: 100px;
+    width: 140px;
     margin: 15px auto;
 `;
 
@@ -20,8 +20,8 @@ export const PhotoImageStyle = styled.Image`
 `;
 
 export const PhotoTitleStyle = styled.Text`
-    font-size: 18px;
-    max-width: 200px;
-    max-height: 40px;
+    font-size: 14px;
+    max-width: 150px;
+    max-height: 20px;
     text-align: center;
 `;
