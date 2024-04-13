@@ -11,7 +11,8 @@ export default function App() {
 
   useEffect(() => {
     if (imageUri) {
-      createPhoto(imageUri, ['todo']);
+      createPhoto(imageUri, ['label'])
+        .then(()=>alert('Successfully saved'));
     }
   }, [imageUri]);
 
