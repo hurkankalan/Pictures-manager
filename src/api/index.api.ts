@@ -1,12 +1,18 @@
 import axios from "axios";
 
+const API_URL = "http://192.168.207.150:8080";
+
 const axiosInstance = axios.create({
-  baseURL: "http://192.168.138.222:8080/api",
+  baseURL: `${API_URL}/api`,
   headers: {
-    "Content-Type": "application/json",
+    "Content-Type": "application/ld+json",
   },
 });
-const updateAxiosInstanceWithToken = (token:string) => {
+
+export const checkHealth = async () => axios.get(`${API_URL}/health-check`);
+
+const updateAxiosInstanceWithToken = (token: string) => {
   axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 };
-export { axiosInstance, updateAxiosInstanceWithToken };
+
+export {axiosInstance, updateAxiosInstanceWithToken};

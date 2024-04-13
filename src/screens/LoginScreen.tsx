@@ -13,30 +13,28 @@ import {loginUser, getMeUser} from "../store/slices/authSlice";
 import {AppDispatch, RootState} from "../store/store";
 
 const schema = yup
-    .object()
-    .shape({
-        email: yup.string().email().required(),
-        password: yup.string().required(),
-    })
-    .required();
+  .object()
+  .shape({
+    email: yup.string().email().required(),
+    password: yup.string().required(),
+  })
+  .required();
 
-export default function LoginScreen({
-                                        navigation,
-                                    }: {
-    navigation: any;
+export default function LoginScreen({navigation}: {
+  navigation: any;
 }): ReactElement {
-    const {
-        control,
-        setError,
-        formState: {errors},
-        handleSubmit,
-    } = useForm<LoginUser>({
-        defaultValues: {
-            email: "",
-            password: "",
-        },
-        resolver: yupResolver(schema),
-    });
+  const {
+    control,
+    setError,
+    formState: {errors},
+    handleSubmit,
+  } = useForm<LoginUser>({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+    resolver: yupResolver(schema),
+  });
 
     /*    const dispatch: AppDispatch = useDispatch();
 
