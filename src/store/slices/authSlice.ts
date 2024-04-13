@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { register, login } from "../../api/user.api";
+import { register, login, getMe } from "../../api/user.api";
 import { LoginUser, InitialUserState } from "../../types/User";
 import { updateAxiosInstanceWithToken} from '../../api/index.api';
 export const registerUser = createAsyncThunk(
@@ -15,6 +15,18 @@ export const registerUser = createAsyncThunk(
       return rejectWithValue(error.response.data);
     }
   }
+);
+export const getMeUser = createAsyncThunk(
+    'auth/getMe',
+    async (_, { rejectWithValue }) => {
+      try {
+        const response = await getMe();
+        return response;
+      } catch (error:any) {
+        alert(error.response.data);
+        return rejectWithValue(error.response.data);
+      }
+    }
 );
 
 export const loginUser = createAsyncThunk(
@@ -35,6 +47,7 @@ export const loginUser = createAsyncThunk(
 
 const initialState: InitialUserState = {
   user: null,
+  userId:  null,
   token: null,
   loading: false,
   success: false,
@@ -51,6 +64,7 @@ export const authSlice = createSlice({
     },
     logOut: (state) => {
       state.user = null;
+      state.userId = null;
       state.token = null;
       state.loading = false;
       state.success = false;
@@ -67,6 +81,11 @@ export const authSlice = createSlice({
       state.loading = false;
       state.success = true;
       state.error = null;
+    });
+    builder.addCase(getMeUser.fulfilled, (state, { payload }) => {
+      state.success = true;
+      state.loading = false;
+      state.userId = payload.id;
     });
     builder.addCase(registerUser.rejected, (state, { payload }) => {
       state.loading = false;
