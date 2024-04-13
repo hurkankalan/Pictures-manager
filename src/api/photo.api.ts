@@ -45,7 +45,7 @@ export const getPhotoFile = async (photoId: number, fileName: string) => {
     const bearer = axiosInstance.defaults.headers.common['Authorization'];
 
     return FileSystem.downloadAsync(
-        `${apiUrl}'/photos/file/${photoId}`,
+        `${apiUrl}/photos/file/${photoId}`,
         `${FileSystem.documentDirectory}/${fileName}`,
         {
             headers: {
