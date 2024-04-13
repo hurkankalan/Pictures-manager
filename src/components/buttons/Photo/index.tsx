@@ -39,7 +39,6 @@ export default function Photo({photo, onPress}: PhotoProps) {
         ? <PhotoImageStyle source={{uri: imageUri}}/>
         : <PhotoStatusStyle>{error ? 'Not found' : 'Loading...'}</PhotoStatusStyle>
       }
-      {/*<PhotoTitleStyle>{photo.name}</PhotoTitleStyle>*/}
     </PhotoContainerStyle>
   );
 }
