@@ -4,7 +4,6 @@ import {
     PhotoImageStyle,
     PhotoTitleStyle
 } from './style';
-import {ImageSourcePropType, Text} from "react-native";
 import {getPhotoFile, PhotoResponse} from "../../../api/photo.api";
 
 interface PhotoProps {
@@ -12,20 +11,20 @@ interface PhotoProps {
     onPress: () => void;
 }
 
-const Photo: React.FC<PhotoProps> = ({photo, onPress}: PhotoProps) => {
-    // const [image, setImage] = useState<ImageSourcePropType | undefined>();
-    const [image, setImage] = useState<string | undefined>();
+export default function Photo({photo, onPress}: PhotoProps) {
+    const [imageUri, setImageUri] = useState<string | undefined>();
     const [selected, setSelected] = useState<boolean>(false);
-
+    const [error, setError] = useState<boolean>(false);
     const handleLongPress = () => {
         setSelected(!selected);
     };
 
     useEffect(() => {
         getPhotoFile(photo.id, photo.name)
-            .then(imageUrl => {
-                //  setImage(require(imageUrl.uri))
-                setImage(imageUrl.uri)
+            .then(downloaded => {
+                const ok = downloaded.status === 200
+                setError(!ok)
+                ok && setImageUri(downloaded.uri)
             })
             .catch(error => alert(error.message))
     }, [photo]);
@@ -36,14 +35,11 @@ const Photo: React.FC<PhotoProps> = ({photo, onPress}: PhotoProps) => {
             onPress={onPress}
             selected={selected}
         >
-            {image
-                // ? <PhotoImageStyle source={image}/>
-                ? <Text>{image}</Text>
-                : <Text>Loading...</Text>
+            {imageUri
+                ? <PhotoImageStyle source={{uri: imageUri}}/>
+                : <PhotoTitleStyle>{error ? 'Not found' : 'Loading...'}</PhotoTitleStyle>
             }
-            <PhotoTitleStyle>{photo.name}</PhotoTitleStyle>
+            {/*<PhotoTitleStyle>{photo.name}</PhotoTitleStyle>*/}
         </PhotoContainerStyle>
     );
 }
-
-export default Photo;
