@@ -4,15 +4,13 @@ import {NavigationContainer} from "@react-navigation/native";
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import GalleryScreen from "../screens/GalleryScreen";
 import CameraScreen from "../screens/CameraScreen";
 import SettingsScreen from "../screens/SettingsScreen";
 import {RootState} from "../store/store";
 import LoginScreen from "../screens/LoginScreen";
 import RegisterScreen from "../screens/RegisterScreen";
 import ProfileScreen from "../screens/ProfileScreen";
-import AlbumScreen from "../screens/AlbumScreen";
-import PhotoScreen from "../screens/PhotoScreen";
+import GalleryNavigator from "../screens/Gallery/GalleryNavigator";
 
 const Tab = createBottomTabNavigator();
 const AuthStack = createNativeStackNavigator();
@@ -43,7 +41,7 @@ export default function Navigation(): ReactNode {
                             tabBarInactiveTintColor: "gray",
                         })}
                     >
-                        <Tab.Screen name="Gallery" component={GalleryScreen}/>
+                        <Tab.Screen name="Gallery" component={GalleryNavigator} options={{headerShown:false}}/>
                         <Tab.Screen
                             name="Camera"
                             component={CameraScreen}
