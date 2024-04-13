@@ -6,13 +6,24 @@ import {useSelector} from "react-redux";
 import React, {useCallback, useEffect, useState} from "react";
 import AddAlbumModal from "../../components/modals/AddAlbum";
 import {ListRenderItemInfo} from "react-native";
+import {RouteProp} from "@react-navigation/native";
+import {RootStackParamList} from "../../navigation/navigation.types";
+import {NativeStackNavigationProp} from "@react-navigation/native-stack";
+
+type GalleryScreenRouteProp = RouteProp<RootStackParamList, 'GalleryHome'>;
+type GalleryScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'GalleryHome'>;
+
+export type GalleryScreenProps = {
+  route: GalleryScreenRouteProp;
+  navigation: GalleryScreenNavigationProp;
+};
 
 export interface DataItem {
   id: number;
   name: string;
 }
 
-export default function GalleryScreen({navigation}: any) {
+export default function GalleryScreen({route, navigation}: GalleryScreenProps) {
   const selectedAlbum = useSelector((state: any) => state.album.selectedAlbum);
   const [isAlbumSelected, setIsAlbumSelected] = useState<boolean>(false);
   const [modalVisible, setModalVisible] = useState(false);
@@ -31,7 +42,7 @@ export default function GalleryScreen({navigation}: any) {
       key={item.id}
       id={item.id}
       name={item.name}
-      onPress={() => navigation.navigate('Album', {albumId: item.id})}
+      onPress={() => navigation.navigate('Album', {album: item})}
       image={require("../../../assets/images/album_icon.png")}
     />
   ), []);
