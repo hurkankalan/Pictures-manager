@@ -6,31 +6,31 @@ import {ScrollItemContainerStyle} from "../../components/containers/PrimaryScrol
 import {ListRenderItemInfo} from "react-native";
 
 export default function AlbumScreen({route, navigation}: any) {
-    const {albumId} = route.params;
-    const [photos, setPhotos] = useState<PhotoResponse[]>([])
+  const {albumId} = route.params;
+  const [photos, setPhotos] = useState<PhotoResponse[]>([])
 
-    useEffect(() => {
-        if (!isNaN(albumId)) {
-            listPhotosByAlbumId(albumId)
-                .then(listing => setPhotos(listing.photos));
-        }
-    }, [albumId]);
+  useEffect(() => {
+    if (!isNaN(albumId)) {
+      listPhotosByAlbumId(albumId)
+        .then(listing => setPhotos(listing.photos));
+    }
+  }, [albumId]);
 
-    const renderItem: any = useCallback(({item}: ListRenderItemInfo<PhotoResponse>) => (
-        <Photo
-            key={item.id}
-            photo={item}
-            onPress={() => navigation.navigate('Photo', {photo: item})}
-        />
-    ), []);
+  const renderItem: any = useCallback(({item}: ListRenderItemInfo<PhotoResponse>) => (
+    <Photo
+      key={item.id}
+      photo={item}
+      onPress={() => navigation.navigate('Photo', {photo: item})}
+    />
+  ), []);
 
-    return (
-        <ItemContainerStyle>
-            <ScrollItemContainerStyle
-                data={photos}
-                renderItem={renderItem}
-                numColumns={2}
-            />
-        </ItemContainerStyle>
-    );
+  return (
+    <ItemContainerStyle>
+      <ScrollItemContainerStyle
+        data={photos}
+        renderItem={renderItem}
+        numColumns={2}
+      />
+    </ItemContainerStyle>
+  );
 }

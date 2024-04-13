@@ -19,7 +19,7 @@ export const PhotoImageStyle = styled.Image`
     margin: auto;
 `;
 
-export const PhotoTitleStyle = styled.Text`
+export const PhotoStatusStyle = styled.Text`
     font-size: 14px;
     max-width: 150px;
     max-height: 20px;
