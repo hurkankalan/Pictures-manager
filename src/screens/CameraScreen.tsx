@@ -7,7 +7,7 @@ import { Camera, FlashMode } from "expo-camera";
 
 export function CameraScreen() {
   const [permission, requestPermission] = Camera.useCameraPermissions();
-  const cameraRef = useRef(null);
+  const cameraRef = useRef<Camera>(null);
   const [ratio, setRatio] = useState("16:9");
   const [zoom, setZoom] = useState(0);
   const [flashMode, setFlash] = useState<FlashMode>();
