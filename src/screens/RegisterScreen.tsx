@@ -10,6 +10,7 @@ import { PrimaryTitle } from "../components/texts/PrimaryTitle/style";
 import { ErrorText } from "../components/texts/ErrorText/style";
 import PrimaryButton from "../components/buttons/PrimaryButton/index";
 import LogoSvg from "../components/svg/LogoSvg";
+import ServerStatus from "../components/texts/ServerStatus";
 
 export const Input = ({ control, name, ...props }: any) => {
   const { field } = useController({
@@ -116,6 +117,7 @@ export default function RegisterScreen({
           Log in here
         </Text>
       </View>
+      <ServerStatus/>
     </View>
   );
 }

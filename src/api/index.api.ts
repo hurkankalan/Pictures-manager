@@ -9,7 +9,7 @@ const axiosInstance = axios.create({
   },
 });
 
-export const checkHealth = async () => axios.get(`${API_URL}/health-check`);
+export const healthCheck = async () => axios.get(`${API_URL}/health-check`);
 
 const updateAxiosInstanceWithToken = (token: string) => {
   axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;

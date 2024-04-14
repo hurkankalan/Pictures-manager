@@ -11,6 +11,7 @@ import LogoSvg from "../components/svg/LogoSvg";
 import {Input} from "./RegisterScreen";
 import {loginUser, getMeUser} from "../store/slices/authSlice";
 import {AppDispatch, RootState} from "../store/store";
+import ServerStatus from "../components/texts/ServerStatus";
 
 const schema = yup
   .object()
@@ -82,6 +83,7 @@ export default function LoginScreen({navigation}: {
                     Register here
                 </Text>
             </View>
+            <ServerStatus/>
         </View>
     );
 }
