@@ -3,12 +3,26 @@ import { Button, Modal, StyleSheet, Text, View } from "react-native";
 import { CameraContainerStyle } from "../components/containers/PrimaryContainer/style";
 import * as ImagePicker from "expo-image-picker";
 import { ViewStyle } from "../components/modals/AddAlbum/style";
-import { Camera } from "expo-camera";
+import { Camera, FlashMode } from "expo-camera";
 
 export function CameraScreen() {
   const [permission, requestPermission] = Camera.useCameraPermissions();
   const cameraRef = useRef(null);
   const [ratio, setRatio] = useState("16:9");
+  const [zoom, setZoom] = useState(0);
+  const [flashMode, setFlash] = useState<FlashMode>();
+
+  function changeRatio() {
+    setRatio(ratio === "16:9" ? "4:3" : "16:9");
+  }
+
+  function changeZoom() {
+    setZoom(zoom === 0 ? 0.5 : 0);
+  }
+
+  function toggleFlashMode() {
+    setFlash(flashMode === "off" || !flashMode ? "on" : ("off" as any));
+  }
 
   if (!permission) {
     return (
@@ -30,7 +44,16 @@ export function CameraScreen() {
   }
   return (
     <>
-      <Camera style={styles.camera} ref={cameraRef} ratio={ratio} />
+      <Camera
+        style={styles.camera}
+        ref={cameraRef}
+        ratio={ratio}
+        zoom={zoom}
+        flashMode={flashMode}
+      />
+      <Button title="Change Ratio" onPress={changeRatio} />
+      <Button title="Change Zoom" onPress={changeZoom} />
+      <Button title="Toggle Flash" onPress={toggleFlashMode} />
       <Button
         title="Take a picture"
         onPress={async () => {
