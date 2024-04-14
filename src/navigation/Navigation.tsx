@@ -5,7 +5,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import GalleryScreen from "../screens/GalleryScreen";
-import CameraScreen from "../screens/CameraScreen";
+import {CameraScreen} from "../screens/CameraScreen";
 import SettingsScreen from "../screens/SettingsScreen";
 import { RootState } from "../store/store";
 import LoginScreen from "../screens/LoginScreen";
