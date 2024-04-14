@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { register, login } from "../../api/user.api";
 import { LoginUser, InitialUserState } from "../../types/User";
-
+import { updateAxiosInstanceWithToken } from "../../api/index.api";
 export const registerUser = createAsyncThunk(
   "auth/register",
   async ({ email, password }: LoginUser, { rejectWithValue }) => {
@@ -32,7 +32,7 @@ export const loginUser = createAsyncThunk(
 
 const initialState: InitialUserState = {
   user: null,
-  token: "faketoken",
+  token: "null",
   loading: false,
   success: false,
   error: null,
