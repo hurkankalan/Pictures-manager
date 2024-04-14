@@ -4,6 +4,7 @@ import { CameraContainerStyle } from "../components/containers/PrimaryContainer/
 import * as ImagePicker from "expo-image-picker";
 import { ViewStyle } from "../components/modals/AddAlbum/style";
 import { Camera, FlashMode } from "expo-camera";
+import {StatusBar} from "expo-status-bar";
 
 export function CameraScreen() {
   const [permission, requestPermission] = Camera.useCameraPermissions();
@@ -44,6 +45,7 @@ export function CameraScreen() {
   }
   return (
     <>
+      <StatusBar hidden={true}/>
       <Camera
         style={styles.camera}
         ref={cameraRef}
