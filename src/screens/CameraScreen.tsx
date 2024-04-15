@@ -116,4 +116,9 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
   },
+  flash: {},
+  zoom: {},
+  ratio: {},
+  cameraType: {},
+  takePicture: {},
 });
