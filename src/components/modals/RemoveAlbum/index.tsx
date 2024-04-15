@@ -5,9 +5,8 @@ import {PrimaryTitle} from "../../texts/PrimaryTitle/style";
 import {AlbumImageStyle} from "../../buttons/Album/style";
 import PrimaryButton from "../../buttons/PrimaryButton";
 import {useDispatch, useSelector} from "react-redux";
-import {clearSelectAlbum, setRemoveModalVisible} from "../../../store/slices/albumSlice";
+import {clearSelectAlbum, deleteAlbumAsync, setRemoveModalVisible} from "../../../store/slices/albumSlice";
 import {PrimaryTextStyle} from "../../texts/PrimaryText/style";
-import {deleteAlbumById} from "../../../api/album.api";
 
 export const RemoveAlbum: React.FC = () => {
     const dispatch = useDispatch();
@@ -15,7 +14,8 @@ export const RemoveAlbum: React.FC = () => {
     const selectedAlbums = useSelector((state: any) => state.album.selectedAlbum);
 
     const handleRemoveAlbum = async () => {
-        await deleteAlbumById(selectedAlbums);
+        // @ts-ignore
+        dispatch(deleteAlbumAsync(selectedAlbums))
         dispatch(setRemoveModalVisible(false));
         dispatch(clearSelectAlbum());
     };
