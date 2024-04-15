@@ -45,7 +45,7 @@ export default function Navigation(): ReactNode {
             <Tab.Screen
               name="Camera"
               component={CameraScreen}
-              options={{unmountOnBlur: true}}
+              options={{unmountOnBlur: true, headerShown:false }}
             />
             <Tab.Screen name="Settings" component={SettingsScreen}/>
           </Tab.Navigator>

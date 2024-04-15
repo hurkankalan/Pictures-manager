@@ -1,62 +1,91 @@
-import {useEffect, useState} from 'react';
-import {Button, Modal} from 'react-native';
+import {useEffect, useState, useRef} from "react";
+import {Button, Modal, StyleSheet, Text, View} from "react-native";
 import {CameraContainerStyle} from "../components/containers/PrimaryContainer/style";
-import * as ImagePicker from 'expo-image-picker';
+import * as ImagePicker from "expo-image-picker";
 import {ViewStyle} from "../components/modals/AddAlbum/style";
+import {Camera, FlashMode} from "expo-camera";
+import {StatusBar} from "expo-status-bar";
 import {createPhoto} from "../api/photo.api";
 
-export default function App() {
+export function CameraScreen() {
   const [imageUri, setImageUri] = useState<string | undefined>();
-  const [modalVisible, setModalVisible] = useState(true);
+  const [permission, requestPermission] = Camera.useCameraPermissions();
+  const cameraRef = useRef<Camera>(null);
+  const [ratio, setRatio] = useState("16:9");
+  const [zoom, setZoom] = useState(0);
+  const [flashMode, setFlash] = useState<FlashMode>();
 
   useEffect(() => {
     if (imageUri) {
       createPhoto(imageUri, ['label'])
-        .then(()=>alert('Successfully saved'));
+        .then(() => alert('Successfully saved'));
     }
   }, [imageUri]);
 
-  const openImagePicker = async (useCamera: boolean) => {
-    let result;
+  function changeRatio() {
+    setRatio(ratio === "16:9" ? "4:3" : "16:9");
+  }
 
-    if (useCamera) {
-      result = await ImagePicker.launchCameraAsync({
-        allowsEditing: true,
-        aspect: [4, 3],
-        quality: 1,
-      });
-    } else {
-      result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: true,
-        aspect: [4, 3],
-        quality: 1,
-      });
-    }
+  function changeZoom() {
+    setZoom(zoom === 0 ? 0.5 : 0);
+  }
 
-    if (!result.canceled && result.assets?.[0]?.uri) {
-      setImageUri(result.assets?.[0]?.uri);
-      console.log("uri: " + result.assets?.[0]?.uri);
-    }
+  function toggleFlashMode() {
+    setFlash(flashMode === "off" || !flashMode ? "on" : ("off" as any));
+  }
 
-    console.log("result: " + JSON.stringify(result));
-  };
+  if (!permission) {
+    return (
+      <View style={styles.container}>
+        <Text style={{textAlign: "center"}}>Requesting permission</Text>
+      </View>
+    );
+  }
 
+  if (!permission.granted) {
+    return (
+      <View style={styles.container}>
+        <Text style={{textAlign: "center"}}>
+          We need your permission to show the camera
+        </Text>
+        <Button onPress={requestPermission} title="grant permission"/>
+      </View>
+    );
+  }
   return (
-    <CameraContainerStyle>
-      <Modal
-        animationType="slide"
-        transparent={false}
-        visible={modalVisible}
-        onRequestClose={() => {
-          setModalVisible(!modalVisible);
-        }}>
-        <ViewStyle>
-          <Button title="Take a Picture" onPress={() => openImagePicker(true)}/>
-          <Button title="Choose from Gallery" onPress={() => openImagePicker(false)}/>
-          <Button title="Cancel" onPress={() => setModalVisible(false)}/>
-        </ViewStyle>
-      </Modal>
-    </CameraContainerStyle>
+    <>
+      <StatusBar hidden={true}/>
+      <Camera
+        style={styles.camera}
+        ref={cameraRef}
+        ratio={ratio}
+        zoom={zoom}
+        flashMode={flashMode}
+      />
+      <Button title="Change Ratio" onPress={changeRatio}/>
+      <Button title="Change Zoom" onPress={changeZoom}/>
+      <Button title="Toggle Flash" onPress={toggleFlashMode}/>
+      <Button
+        title="Take a picture"
+        onPress={async () => {
+          if (cameraRef.current) {
+            const pictureMetadata = await cameraRef.current.takePictureAsync();
+            console.log("pictureMetadata", pictureMetadata);
+          } else {
+            console.log("Error while taking picture");
+          }
+        }}
+      />
+    </>
   );
 }
+
+const styles = StyleSheet.create({
+  camera: {
+    flex: 1,
+  },
+  container: {
+    flex: 1,
+    justifyContent: "center",
+  },
+});
