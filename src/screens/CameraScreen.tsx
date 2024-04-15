@@ -1,8 +1,14 @@
-import {useEffect, useState, useRef} from "react";
-import {Button, StyleSheet, Text, View} from "react-native";
-import {Camera, FlashMode} from "expo-camera";
-import {StatusBar} from "expo-status-bar";
-import {createPhoto} from "../api/photo.api";
+import { useEffect, useState, useRef } from "react";
+import { Button, StyleSheet, Text, View } from "react-native";
+import { Camera, CameraType, FlashMode } from "expo-camera";
+import { StatusBar } from "expo-status-bar";
+import { createPhoto } from "../api/photo.api";
+import {
+  Entypo,
+  MaterialCommunityIcons,
+  Ionicons,
+  Fontisto,
+} from "@expo/vector-icons";
 
 export function CameraScreen() {
   const [imageUri, setImageUri] = useState<string | undefined>();
@@ -11,13 +17,22 @@ export function CameraScreen() {
   const [ratio, setRatio] = useState("16:9");
   const [zoom, setZoom] = useState(0);
   const [flashMode, setFlash] = useState<FlashMode>();
+  const [camType, setCamType] = useState<CameraType>();
 
   useEffect(() => {
     if (imageUri) {
-      createPhoto(imageUri, ['label'])
-        .then(() => alert('Successfully saved'));
+      createPhoto(imageUri, ["label"]).then(() => alert("Successfully saved"));
     }
   }, [imageUri]);
+
+  async function takePicture() {
+    if (cameraRef.current) {
+      const pictureMetadata = await cameraRef.current.takePictureAsync();
+      setImageUri(pictureMetadata.uri);
+    } else {
+      alert("Fail to take photo");
+    }
+  }
 
   function changeRatio() {
     setRatio(ratio === "16:9" ? "4:3" : "16:9");
@@ -31,10 +46,14 @@ export function CameraScreen() {
     setFlash(flashMode === "off" || !flashMode ? "on" : ("off" as any));
   }
 
+  function toggleCameraType() {
+    setCamType(camType === "back" || !camType ? "front" : ("back" as any));
+  }
+
   if (!permission) {
     return (
       <View style={styles.container}>
-        <Text style={{textAlign: "center"}}>Requesting permission</Text>
+        <Text style={{ textAlign: "center" }}>Requesting permission</Text>
       </View>
     );
   }
@@ -42,36 +61,48 @@ export function CameraScreen() {
   if (!permission.granted) {
     return (
       <View style={styles.container}>
-        <Text style={{textAlign: "center"}}>
+        <Text style={{ textAlign: "center" }}>
           We need your permission to show the camera
         </Text>
-        <Button onPress={requestPermission} title="grant permission"/>
+        <Button onPress={requestPermission} title="grant permission" />
       </View>
     );
   }
   return (
     <>
-      <StatusBar hidden={true}/>
+      <StatusBar hidden={true} />
       <Camera
         style={styles.camera}
         ref={cameraRef}
         ratio={ratio}
         zoom={zoom}
         flashMode={flashMode}
+        type={camType}
       />
-      <Button title="Change Ratio" onPress={changeRatio}/>
-      <Button title="Change Zoom" onPress={changeZoom}/>
-      <Button title="Toggle Flash" onPress={toggleFlashMode}/>
-      <Button
-        title="Take a picture"
-        onPress={async () => {
-          if (cameraRef.current) {
-            const pictureMetadata = await cameraRef.current.takePictureAsync();
-            setImageUri(pictureMetadata.uri);
-          } else {
-            alert('Fail to take photo');
-          }
-        }}
+      <Entypo
+        name="Take a picture"
+        size={24}
+        color="black"
+        onPress={takePicture}
+      />
+      <MaterialCommunityIcons
+        name="ratio"
+        size={24}
+        color="black"
+        onPress={changeRatio}
+      />
+      <Ionicons
+        name="flash-outline"
+        size={24}
+        color="black"
+        onPress={toggleFlashMode}
+      />
+      <Fontisto name="zoom" size={24} color="black" onPress={changeZoom} />
+      <Ionicons
+        name="camera-reverse-outline"
+        size={24}
+        color="black"
+        onPress={toggleCameraType}
       />
     </>
   );
