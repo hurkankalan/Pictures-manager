@@ -8,6 +8,7 @@ import {PrimaryTitle} from "../../texts/PrimaryTitle/style";
 import {ManageError} from "../../texts/PrimaryText";
 import {useDispatch, useSelector} from "react-redux";
 import {setAddModalVisible} from "../../../store/slices/albumSlice";
+import {createAlbum} from "../../../api/album.api";
 
 function AddAlbumModal() {
     const dispatch = useDispatch();
@@ -16,14 +17,18 @@ function AddAlbumModal() {
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
 
-    const handleAddAlbum = () => {
+    const handleAddAlbum = async () => {
         if (albumName === '') {
             setError(true);
             setErrorMessage('Album name is required');
             return;
         }
-        // @todo call api to add album
-        console.log('Add Album');
+        try {
+            await createAlbum(albumName);
+            dispatch(setAddModalVisible(false));
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     const closeModal = () => {

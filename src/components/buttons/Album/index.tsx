@@ -17,11 +17,12 @@ const Album: React.FC<AlbumProps> = ({ name, onPress, image, id }: AlbumProps) =
     const [selected, setSelected] = useState<boolean>(false);
 
     const handleLongPress = (albumId: number) => {
-        if (selectedAlbum.includes(albumId)) {
+        if (selected) {
             dispatch(removeSelectAlbum(albumId));
+            console.log(selectedAlbum);
         } else {
             dispatch(setSelectAlbum(albumId));
-            console.log("test2");
+            console.log(selectedAlbum);
         }
         setSelected(!selected);
     };

@@ -1,6 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { getAlbumsByUserId } from "../../api/album.api";
 
 interface AlbumState {
+    albumList: any,
     selectedAlbum: number[],
     isAddModalVisible: boolean,
     isUpdateModalVisible: boolean,
@@ -9,6 +11,7 @@ interface AlbumState {
 }
 
 const initialState: AlbumState = {
+    albumList: getAlbumsByUserId(3),
     selectedAlbum: [],
     isAddModalVisible: false,
     isUpdateModalVisible: false,
@@ -20,6 +23,9 @@ export const albumSlice = createSlice({
     name: 'album',
     initialState,
     reducers: {
+        setAlbumList: (state, action: PayloadAction<any>) => {
+            state.albumList = action.payload;
+        },
         setSelectAlbum: (state, action: PayloadAction<number>) => {
             state.selectedAlbum.push(action.payload);
         },
@@ -45,6 +51,7 @@ export const albumSlice = createSlice({
 });
 
 export const {
+    setAlbumList,
     setSelectAlbum,
     removeSelectAlbum,
     clearSelectAlbum,
