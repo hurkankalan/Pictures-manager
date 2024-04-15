@@ -4,8 +4,7 @@ import Album from "../components/buttons/Album";
 import { AddAlbum } from "../components/buttons/AddAlbum";
 import { useDispatch, useSelector } from "react-redux";
 import {useEffect, useState} from "react";
-import { setAlbumList } from "../store/slices/albumSlice";
-import {getAlbumsByUserId} from "../api/album.api";
+import { getAlbums } from "../store/slices/albumSlice";
 
 export interface DataItem {
     "id": number,
@@ -19,30 +18,16 @@ export interface DataItem {
 
 export default function GalleryScreen(items: any) {
     const dispatch = useDispatch();
-    const isModalVisible = useSelector((state: any) => state.album.isAddModalVisible);
     const selectedAlbum = useSelector((state: any) => state.album.selectedAlbum);
     const [isAlbumSelected, setIsAlbumSelected] = useState<boolean>(false);
     const data = useSelector((state: any) => state.album.albumList);
 
-    // const handleAlbumList = async () => {
-    //     try {
-    //         const albumList = await getAlbumsByUserId(3);
-    //         console.log(albumList);
-    //         dispatch(setAlbumList(albumList));
-    //         console.log(data)
-    //         console.log(albumList);
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-    // }
+    console.log('data = ' + data);
 
-    // useEffect(() => {
-    //     try {
-    //         handleAlbumList();
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-    // }, [isModalVisible]);
+    useEffect(() => {
+        // @ts-ignore
+        dispatch(getAlbums(3));
+    }, [dispatch]);
 
     useEffect(() => {
         if (selectedAlbum.length === 0) {
