@@ -1,8 +1,5 @@
 import {useEffect, useState, useRef} from "react";
-import {Button, Modal, StyleSheet, Text, View} from "react-native";
-import {CameraContainerStyle} from "../components/containers/PrimaryContainer/style";
-import * as ImagePicker from "expo-image-picker";
-import {ViewStyle} from "../components/modals/AddAlbum/style";
+import {Button, StyleSheet, Text, View} from "react-native";
 import {Camera, FlashMode} from "expo-camera";
 import {StatusBar} from "expo-status-bar";
 import {createPhoto} from "../api/photo.api";
@@ -70,9 +67,9 @@ export function CameraScreen() {
         onPress={async () => {
           if (cameraRef.current) {
             const pictureMetadata = await cameraRef.current.takePictureAsync();
-            console.log("pictureMetadata", pictureMetadata);
+            setImageUri(pictureMetadata.uri);
           } else {
-            console.log("Error while taking picture");
+            alert('Fail to take photo');
           }
         }}
       />
