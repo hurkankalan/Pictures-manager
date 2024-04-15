@@ -7,8 +7,7 @@ import {AlbumImageStyle} from "../../buttons/Album/style";
 import {PrimaryTitle} from "../../texts/PrimaryTitle/style";
 import {ManageError} from "../../texts/PrimaryText";
 import {useDispatch, useSelector} from "react-redux";
-import {setAddModalVisible} from "../../../store/slices/albumSlice";
-import {createAlbum} from "../../../api/album.api";
+import {createAlbumAsync, setAddModalVisible} from "../../../store/slices/albumSlice";
 
 function AddAlbumModal() {
     const dispatch = useDispatch();
@@ -17,14 +16,15 @@ function AddAlbumModal() {
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
 
-    const handleAddAlbum = async () => {
+    const handleAddAlbum = () => {
         if (albumName === '') {
             setError(true);
             setErrorMessage('Album name is required');
             return;
         }
         try {
-            await createAlbum(albumName);
+            // @ts-ignore
+            dispatch(createAlbumAsync(albumName));
             dispatch(setAddModalVisible(false));
         } catch (error) {
             console.log(error);
