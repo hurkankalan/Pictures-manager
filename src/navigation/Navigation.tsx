@@ -4,7 +4,7 @@ import {NavigationContainer} from "@react-navigation/native";
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import CameraScreen from "../screens/CameraScreen";
+import {CameraScreen} from "../screens/CameraScreen";
 import SettingsScreen from "../screens/SettingsScreen";
 import {RootState} from "../store/store";
 import LoginScreen from "../screens/LoginScreen";
@@ -45,7 +45,7 @@ export default function Navigation(): ReactNode {
             <Tab.Screen
               name="Camera"
               component={CameraScreen}
-              options={{unmountOnBlur: true}}
+              options={{unmountOnBlur: true, headerShown:false }}
             />
             <Tab.Screen name="Settings" component={SettingsScreen}/>
           </Tab.Navigator>
