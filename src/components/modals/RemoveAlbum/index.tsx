@@ -3,19 +3,21 @@ import {Modal, TouchableWithoutFeedback, View} from "react-native";
 import {ModalContainerStyle} from "../AddAlbum/style";
 import {PrimaryTitle} from "../../texts/PrimaryTitle/style";
 import {AlbumImageStyle} from "../../buttons/Album/style";
-import {PrimaryText} from "../../texts/PrimaryText";
 import PrimaryButton from "../../buttons/PrimaryButton";
 import {useDispatch, useSelector} from "react-redux";
-import {setRemoveModalVisible, setShareModalVisible, setUpdateModalVisible} from "../../../store/slices/albumSlice";
+import {clearSelectAlbum, setRemoveModalVisible} from "../../../store/slices/albumSlice";
 import {PrimaryTextStyle} from "../../texts/PrimaryText/style";
+import {deleteAlbumById} from "../../../api/album.api";
 
 export const RemoveAlbum: React.FC = () => {
     const dispatch = useDispatch();
     const modalVisible = useSelector((state: any) => state.album.isRemoveModalVisible);
+    const selectedAlbums = useSelector((state: any) => state.album.selectedAlbum);
 
-    const handleRemoveAlbum = () => {
-        // @todo call api to add album
-        console.log('Remove Album');
+    const handleRemoveAlbum = async () => {
+        await deleteAlbumById(selectedAlbums);
+        dispatch(setRemoveModalVisible(false));
+        dispatch(clearSelectAlbum());
     };
 
     const closeModal = () => {
