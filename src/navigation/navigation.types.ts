@@ -7,4 +7,5 @@ export type RootStackParamList = {
   GalleryHome: undefined;
   Album: { album: DataItem };
   Photo: { photo: PhotoResponse };
+  Search: { search: string, includeShared: boolean, album: DataItem };
 };
