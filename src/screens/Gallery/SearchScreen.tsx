@@ -8,36 +8,24 @@ import {RootStackParamList} from "../../navigation/navigation.types";
 import {RouteProp} from "@react-navigation/native";
 import {NativeStackNavigationProp} from "@react-navigation/native-stack";
 
-type AlbumScreenRouteProp = RouteProp<RootStackParamList, 'Album'>;
-type AlbumScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Album'>;
+type SearchScreenRouteProp = RouteProp<RootStackParamList, 'Search'>;
+type SearchScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Search'>;
 
-export type AlbumScreenProps = {
-  route: AlbumScreenRouteProp;
-  navigation: AlbumScreenNavigationProp;
+export type SearchScreenProps = {
+  route: SearchScreenRouteProp;
+  navigation: SearchScreenNavigationProp;
 };
 
-export default function AlbumScreen({route, navigation}: AlbumScreenProps) {
-  const {album} = route.params;
+export default function SearchScreen({route, navigation}: SearchScreenProps) {
+  const {album, search, includeShared} = route.params;
   const [photos, setPhotos] = useState<PhotoResponse[]>([])
-  const [includeShared, setIncludeShared] = useState<boolean>(false);
-  const [searchBar, setSearchBar] = useState<boolean>(false);
-
-  useEffect(() => {
-    navigation.setOptions({
-      headerSearchBarOptions: {
-        onSearchButtonPress: (e) => {
-          navigation.navigate("Search", {search: e.nativeEvent.text?.trim(), includeShared, album});
-        }
-      }
-    });
-  }, [navigation, searchBar]);
 
   useEffect(() => {
     if (!isNaN(album?.id)) {
-      listPhotosByAlbumId(album.id)
+      listPhotosByAlbumId(album.id, search, includeShared)
         .then(listing => setPhotos(listing.photos));
     }
-  }, [album]);
+  }, [album, search, includeShared]);
 
   const renderItem: any = useCallback(({item}: ListRenderItemInfo<PhotoResponse>) => (
     <Photo
@@ -52,7 +40,6 @@ export default function AlbumScreen({route, navigation}: AlbumScreenProps) {
   return (
     <ItemContainerStyle>
       <ScrollItemContainerStyle
-        contentInsetAdjustmentBehavior="automatic"
         data={photos}
         renderItem={renderItem}
         numColumns={2}

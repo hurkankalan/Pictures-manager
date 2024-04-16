@@ -31,9 +31,7 @@ export const Input = ({control, name, ...props}: any) => {
   );
 };
 
-export default function RegisterScreen({
-                                         navigation,
-                                       }: {
+export default function RegisterScreen({navigation}: {
   navigation: any;
 }): ReactElement {
   const {

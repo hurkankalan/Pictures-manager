@@ -17,19 +17,24 @@ export interface PhotoListingResponse {
   photos: PhotoResponse[];
 }
 
-export const listPhoto = async (includeShared: boolean | null = null, search: string | null = null) => {
-  const url = "/photos"
-  + (includeShared || search) ? "?" : ''
-  + includeShared ? 'include_shared=true&' : ''
-  + search ? `search=${search}` : '';
+export const listPhoto = async (search: string | null = null, includeShared: boolean | null = null) => {
+  const url = '/photos'
+    + ((search || includeShared) ? '?' : '')
+    + (search ? `search=${search}` : '')
+    + (includeShared ? 'include_shared=true&' : '');
 
   const response = await axiosInstance.get<PhotoListingResponse>(url);
 
   return response.data;
 };
 
-export const listPhotosByAlbumId = async (albumId: number) => {
-  const response = await axiosInstance.get<PhotoListingResponse>(`/photos/albums/${albumId}`);
+export const listPhotosByAlbumId = async (albumId: number, search: string | undefined = undefined, includeShared: boolean = false) => {
+  const url = '/photos/albums/' + albumId
+    + ((search || includeShared) ? '?' : '')
+    + (search ? `search=${search}` : '')
+    + (includeShared ? 'include_shared=true&' : '');
+
+  const response = await axiosInstance.get<PhotoListingResponse>(url);
 
   return response.data;
 };
