@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { register, login, getMe } from "../../api/user.api";
 import { LoginUser, InitialUserState } from "../../types/User";
-import { updateAxiosInstanceWithToken} from '../../api/index.api';
+import { updateAxiosInstanceWithToken } from "../../api/index.api";
 
 export const registerUser = createAsyncThunk(
   "auth/register",
@@ -19,16 +19,16 @@ export const registerUser = createAsyncThunk(
 );
 
 export const getMeUser = createAsyncThunk(
-    'auth/getMe',
-    async (_, { rejectWithValue }) => {
-      try {
-        const response = await getMe();
-        return response;
-      } catch (error:any) {
-        alert(error.response.data);
-        return rejectWithValue(error.response.data);
-      }
+  "auth/getMe",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await getMe();
+      return response;
+    } catch (error: any) {
+      alert(error.response.data);
+      return rejectWithValue(error.response.data);
     }
+  }
 );
 
 export const loginUser = createAsyncThunk(
@@ -48,8 +48,8 @@ export const loginUser = createAsyncThunk(
 
 const initialState: InitialUserState = {
   user: null,
-  userId:  null,
-  token: null,
+  userId: null,
+  token: "null",
   loading: false,
   success: false,
   error: null,
