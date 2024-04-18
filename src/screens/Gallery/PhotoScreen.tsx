@@ -1,8 +1,8 @@
 import React from "react";
-import {Text} from "react-native";
 import {RouteProp} from "@react-navigation/native";
 import {RootStackParamList} from "../../navigation/navigation.types";
 import {NativeStackNavigationProp} from "@react-navigation/native-stack";
+import Photo from "../../components/buttons/Photo";
 
 type PhotoScreenRouteProp = RouteProp<RootStackParamList, 'Photo'>;
 type PhotoScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Photo'>;
@@ -16,7 +16,7 @@ export default function PhotoScreen({route, navigation}: PhotoScreenProps) {
   const {photo} = route.params;
 
   return (
-    <Text>Visualiser les détails et/ou modifier la photo {photo.id}</Text>
+    <Photo photo={photo} onPress={() => {}}/>
   );
 }
 

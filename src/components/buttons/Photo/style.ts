@@ -8,20 +8,17 @@ export const PhotoContainerStyle = styled.TouchableOpacity<PhotoContainerProps>`
     background-color: ${({ selected }) => (selected ? 'grey' : 'transparent')};
     display: flex;
     align-content: space-between;
-    border-radius: 10px;
-    width: 140px;
-    margin: 15px auto;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    padding: 1px;
 `;
 
 export const PhotoImageStyle = styled.Image`
-    width: 90px;
-    height: 90px;
-    margin: auto;
+    width: 100%;
+    height: 100%;
 `;
 
 export const PhotoStatusStyle = styled.Text`
-    font-size: 14px;
-    max-width: 150px;
-    max-height: 20px;
     text-align: center;
 `;

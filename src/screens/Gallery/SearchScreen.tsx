@@ -1,12 +1,11 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {listPhotosByAlbumId, PhotoResponse} from "../../api/photo.api";
 import Photo from "../../components/buttons/Photo";
-import {ItemContainerStyle} from "../../components/containers/PrimaryContainer/style";
-import {ScrollItemContainerStyle} from "../../components/containers/PrimaryScrollContainer/style";
 import {ListRenderItemInfo} from "react-native";
 import {RootStackParamList} from "../../navigation/navigation.types";
 import {RouteProp} from "@react-navigation/native";
 import {NativeStackNavigationProp} from "@react-navigation/native-stack";
+import {PhotoGridContainerStyle, PhotoGridItemStyle} from "../../components/containers/PhotoGrid/style";
 
 type SearchScreenRouteProp = RouteProp<RootStackParamList, 'Search'>;
 type SearchScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Search'>;
@@ -28,22 +27,23 @@ export default function SearchScreen({route, navigation}: SearchScreenProps) {
   }, [album, search, includeShared]);
 
   const renderItem: any = useCallback(({item}: ListRenderItemInfo<PhotoResponse>) => (
-    <Photo
-      key={item.id}
-      photo={item}
-      onPress={() => {
-        navigation.navigate('Photo', {photo: item})
-      }}
-    />
+    <PhotoGridItemStyle>
+      <Photo
+        key={item.id}
+        photo={item}
+        onPress={() => {
+          navigation.navigate('Photo', {photo: item})
+        }}
+      />
+    </PhotoGridItemStyle>
   ), []);
 
   return (
-    <ItemContainerStyle>
-      <ScrollItemContainerStyle
-        data={photos}
-        renderItem={renderItem}
-        numColumns={2}
-      />
-    </ItemContainerStyle>
+    <PhotoGridContainerStyle
+      contentInsetAdjustmentBehavior="automatic"
+      data={photos}
+      renderItem={renderItem}
+      numColumns={2}
+    />
   );
 }
