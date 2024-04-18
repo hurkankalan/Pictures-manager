@@ -2,13 +2,14 @@ import {ItemContainerStyle} from "../../components/containers/PrimaryContainer/s
 import {ScrollItemContainerStyle} from "../../components/containers/PrimaryScrollContainer/style";
 import Album from "../../components/buttons/Album";
 import {AddAlbum} from "../../components/buttons/AddAlbum";
-import {useSelector} from "react-redux";
-import React, {useCallback, useEffect, useState} from "react";
+import {useDispatch, useSelector} from "react-redux";
+import React, {useCallback, useEffect, useRef, useState} from "react";
 import AddAlbumModal from "../../components/modals/AddAlbum";
 import {ListRenderItemInfo} from "react-native";
 import {RouteProp} from "@react-navigation/native";
 import {RootStackParamList} from "../../navigation/navigation.types";
 import {NativeStackNavigationProp} from "@react-navigation/native-stack";
+import {clearSelectAlbum} from "../../store/slices/albumSlice";
 
 type GalleryScreenRouteProp = RouteProp<RootStackParamList, 'GalleryHome'>;
 type GalleryScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'GalleryHome'>;
@@ -24,6 +25,8 @@ export interface DataItem {
 }
 
 export default function GalleryScreen({route, navigation}: GalleryScreenProps) {
+  const dispatch = useDispatch();
+  const touchedAnAlbum = useRef<boolean>(false);
   const selectedAlbum = useSelector((state: any) => state.album.selectedAlbum);
   const [isAlbumSelected, setIsAlbumSelected] = useState<boolean>(false);
   const [modalVisible, setModalVisible] = useState(false);
@@ -42,7 +45,11 @@ export default function GalleryScreen({route, navigation}: GalleryScreenProps) {
       key={item.id}
       id={item.id}
       name={item.name}
-      onPress={() => navigation.navigate('Album', {album: item})}
+      onPress={() => {
+        touchedAnAlbum.current = true;
+        navigation.navigate('Album', {album: item});
+      }}
+      touchedAnAlbum={touchedAnAlbum}
       image={require("../../../assets/images/album_icon.png")}
     />
   ), []);
@@ -51,8 +58,15 @@ export default function GalleryScreen({route, navigation}: GalleryScreenProps) {
     setModalVisible(true);
   }
 
+  function clearSelection() {
+    if (!touchedAnAlbum.current) {
+      dispatch(clearSelectAlbum())
+    }
+    touchedAnAlbum.current = false;
+  }
+
   return (
-    <ItemContainerStyle>
+    <ItemContainerStyle onTouchEnd={clearSelection}>
       <ScrollItemContainerStyle
         data={albums}
         renderItem={renderItem}
