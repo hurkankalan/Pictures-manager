@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {MutableRefObject} from 'react';
 import { AlbumContainerStyle, AlbumImageStyle, AlbumTitleStyle } from './style';
 import {ImageSourcePropType} from "react-native";
 import {useDispatch, useSelector} from "react-redux";
@@ -9,28 +9,27 @@ interface AlbumProps {
     name: string;
     onPress: () => void;
     image: ImageSourcePropType;
+    touchedAnAlbum: MutableRefObject<boolean>;
 }
 
-const Album: React.FC<AlbumProps> = ({ name, onPress, image, id }: AlbumProps) => {
+const Album: React.FC<AlbumProps> = ({ name, onPress, image, id, touchedAnAlbum}: AlbumProps) => {
     const dispatch = useDispatch();
     const selectedAlbum = useSelector((state: any) => state.album.selectedAlbum);
-    const [selected, setSelected] = useState<boolean>(false);
 
     const handleLongPress = (albumId: number) => {
+      touchedAnAlbum.current = true;
         if (selectedAlbum.includes(albumId)) {
             dispatch(removeSelectAlbum(albumId));
         } else {
             dispatch(setSelectAlbum(albumId));
-            console.log("test2");
         }
-        setSelected(!selected);
     };
 
     return (
         <AlbumContainerStyle
             onLongPress={() => handleLongPress(id)}
             onPress={onPress}
-            selected={selected}
+            selected={selectedAlbum.includes(id)}
         >
             <AlbumImageStyle source={image} />
             <AlbumTitleStyle>{name}</AlbumTitleStyle>
