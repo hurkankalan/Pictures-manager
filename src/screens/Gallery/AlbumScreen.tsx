@@ -1,11 +1,12 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {listPhotosByAlbumId, PhotoResponse} from "../../api/photo.api";
 import Photo from "../../components/buttons/Photo";
-import {ListRenderItemInfo} from "react-native";
+import {ListRenderItemInfo, Text} from "react-native";
 import {RootStackParamList} from "../../navigation/navigation.types";
 import {RouteProp} from "@react-navigation/native";
 import {NativeStackNavigationProp} from "@react-navigation/native-stack";
 import {PhotoGridContainerStyle, PhotoGridItemStyle} from "../../components/containers/PhotoGrid/style";
+import {useDispatch} from "react-redux";
 
 type AlbumScreenRouteProp = RouteProp<RootStackParamList, 'Album'>;
 type AlbumScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Album'>;
@@ -17,15 +18,27 @@ export type AlbumScreenProps = {
 
 export default function AlbumScreen({route, navigation}: AlbumScreenProps) {
   const {album} = route.params;
+  const dispatch = useDispatch();
   const [photos, setPhotos] = useState<PhotoResponse[]>([])
   const [includeShared, setIncludeShared] = useState<boolean>(true);
+  // todo: mettre la condition qui permet de savoir si au moins une photo est selectionnée (avec useSelector)
+  const selection = false;
+
+  function clearSelection() {
+    // todo: activer le dispatch quand il y aura la fonction clearSelectPhoto()
+    // c'est censé suffire pour faire fonctionner l'unselect sur les photos (y'aura un bouton cancel en haut)
+    // dispatch(clearSelectPhoto());
+  }
 
   useEffect(() => {
     navigation.setOptions({
-      headerSearchBarOptions: {
+      headerSearchBarOptions: selection ? undefined : {
         onSearchButtonPress: (e) => {
           navigation.navigate("Search", {search: e.nativeEvent.text?.trim(), includeShared, album});
         }
+      },
+      headerRight: () => {
+        return selection && <Text onPress={clearSelection}>Cancel</Text>
       }
     });
   }, [navigation]);
