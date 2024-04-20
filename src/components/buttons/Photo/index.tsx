@@ -5,6 +5,8 @@ import {
   PhotoStatusStyle
 } from './style';
 import {getPhotoFile, PhotoResponse} from "../../../api/photo.api";
+import {useDispatch} from "react-redux";
+import {clearSelectPhoto, setSelectPhoto} from "../../../store/slices/photoSlice";
 
 interface PhotoProps {
   photo: PhotoResponse;
@@ -12,10 +14,16 @@ interface PhotoProps {
 }
 
 export default function Photo({photo, onPress}: PhotoProps) {
+  const dispatch = useDispatch();
   const [imageUri, setImageUri] = useState<string | undefined>();
   const [selected, setSelected] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
   const handleLongPress = () => {
+    if (selected) {
+      dispatch(clearSelectPhoto());
+    } else {
+      dispatch(setSelectPhoto(photo.id));
+    }
     setSelected(!selected);
   };
 

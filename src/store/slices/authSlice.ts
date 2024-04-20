@@ -1,6 +1,6 @@
-import {createSlice, createAsyncThunk} from "@reduxjs/toolkit";
-import {register, login, getMe} from "../../api/user.api";
-import {LoginUser, InitialUserState} from "../../types/User";
+import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
+import {getMe, login, register} from "../../api/user.api";
+import {InitialUserState, LoginUser} from "../../types/User";
 import {updateAxiosInstanceWithToken} from '../../api/index.api';
 
 function getError(caught: any) {
@@ -27,11 +27,13 @@ export const getMeUser = createAsyncThunk(
   async (_, {rejectWithValue}) => {
     try {
       const response = await getMe();
-      return response.data;
+      console.log('user infos : ' + response);
+        return response;
     } catch (caught: any) {
+
       const error = getError(caught);
       console.error(error);
-      alert(error);
+
       return rejectWithValue(error);
     }
   }
@@ -112,6 +114,15 @@ export const authSlice = createSlice({
       state.success = true;
       state.loading = false;
       state.userId = payload.id;
+    });
+    builder.addCase(getMeUser.pending, (state) => {
+        state.loading = true;
+        state.success = false;
+        state.error = null;
+    });
+    builder.addCase(getMeUser.rejected, (state, {payload}) => {
+      state.error = payload as string | null;
+      state.loading = false;
     });
   },
 });

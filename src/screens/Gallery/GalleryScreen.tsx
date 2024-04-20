@@ -2,13 +2,13 @@ import {ItemContainerStyle} from "../../components/containers/PrimaryContainer/s
 import {ScrollItemContainerStyle} from "../../components/containers/PrimaryScrollContainer/style";
 import Album from "../../components/buttons/Album";
 import {AddAlbum} from "../../components/buttons/AddAlbum";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import React, {useCallback, useEffect, useState} from "react";
-import AddAlbumModal from "../../components/modals/AddAlbum";
 import {ListRenderItemInfo} from "react-native";
 import {RouteProp} from "@react-navigation/native";
 import {RootStackParamList} from "../../navigation/navigation.types";
 import {NativeStackNavigationProp} from "@react-navigation/native-stack";
+import {getAlbums} from "../../store/slices/albumSlice";
 
 type GalleryScreenRouteProp = RouteProp<RootStackParamList, 'GalleryHome'>;
 type GalleryScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'GalleryHome'>;
@@ -19,19 +19,33 @@ export type GalleryScreenProps = {
 };
 
 export interface DataItem {
-  id: number;
-  name: string;
+  "id": number,
+  "name": string,
+  "created_at": string,
+  "shared_to": [],
+  "owner": {
+    "email": string,
+  }
 }
 
 export default function GalleryScreen({route, navigation}: GalleryScreenProps) {
+  const dispatch = useDispatch();
   const selectedAlbum = useSelector((state: any) => state.album.selectedAlbum);
   const [isAlbumSelected, setIsAlbumSelected] = useState<boolean>(false);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [albums, setAlbums] = useState<DataItem[]>([
-    {id: 1, name: "Élément 1"},
-    {id: 2, name: "Élément 2"},
-    {id: 3, name: "Élément 3"},
-  ]);
+  const data = useSelector((state: any) => state.album.albumList);
+  const userId = useSelector((state: any) => state.auth.userId);
+  const error = useSelector((state: any) => state.auth.error);
+  const loading = useSelector((state: any) => state.auth.loading);
+  console.log('user id : ' + userId);
+  console.log('error : ' + error);
+  console.log('loading : ' + loading);
+
+  useEffect(() => {
+    if (!loading) {
+      // @ts-ignore
+      dispatch(getAlbums(userId));
+    }
+  }, [dispatch, loading]);
 
   useEffect(() => {
     setIsAlbumSelected(selectedAlbum.length !== 0);
@@ -47,23 +61,15 @@ export default function GalleryScreen({route, navigation}: GalleryScreenProps) {
     />
   ), []);
 
-  const displayAddAlbumModal = () => {
-    setModalVisible(true);
-  }
-
   return (
-    <ItemContainerStyle>
-      <ScrollItemContainerStyle
-        data={albums}
-        renderItem={renderItem}
-        numColumns={2}
-      />
-      <AddAlbum onPress={() => displayAddAlbumModal()} isAlbumSelected={isAlbumSelected}/>
-      {
-        modalVisible && (
-          <AddAlbumModal modalVisible={modalVisible} setModalVisible={setModalVisible}/>
-        )
-      }
-    </ItemContainerStyle>
+      <ItemContainerStyle>
+        <ScrollItemContainerStyle
+            data={data}
+            renderItem={renderItem}
+            keyExtractor={renderItem.id}
+            numColumns={2}
+        />
+        <AddAlbum isAlbumSelected={isAlbumSelected}/>
+      </ItemContainerStyle>
   );
 }

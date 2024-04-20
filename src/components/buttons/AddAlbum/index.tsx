@@ -1,9 +1,8 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 import { Text } from 'react-native';
 import {AddAlbumContainerStyle, AddAlbumImageStyle, OptionsContainerStyle} from "./style";
 import {
     Menu,
-    MenuProvider,
     MenuOptions,
     MenuOption,
     MenuTrigger,
@@ -63,7 +62,7 @@ export const AddAlbum: React.FC<AddAlbumProps> = ({ isAlbumSelected }: AddAlbumP
     }
 
     return (
-        <MenuProvider>
+        <>
             <OptionsContainerStyle selected={isAlbumSelected}>
                 {isAlbumSelected &&
                     <>
@@ -101,6 +100,6 @@ export const AddAlbum: React.FC<AddAlbumProps> = ({ isAlbumSelected }: AddAlbumP
             {
                 isRemoveModalVisible && displayRemoveAlbumModal()
             }
-        </MenuProvider>
+        </>
     );
 }

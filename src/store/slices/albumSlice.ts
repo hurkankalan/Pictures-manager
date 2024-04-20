@@ -83,7 +83,7 @@ export const albumSlice = createSlice({
             state.error = null;
         });
         builder.addCase(getAlbums.fulfilled, (state, { payload }) => {
-            console.log(payload);
+            console.log('payload : ' + payload);
             state.albumList = payload;
             state.loading = false;
             state.success = true;
