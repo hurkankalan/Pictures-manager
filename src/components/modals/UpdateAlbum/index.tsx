@@ -7,7 +7,11 @@ import {FormInputStyle} from "../../inputs/PrimaryInput/style";
 import {ManageError} from "../../texts/PrimaryText";
 import PrimaryButton from "../../buttons/PrimaryButton";
 import {useDispatch, useSelector} from "react-redux";
-import {setUpdateModalVisible} from "../../../store/slices/albumSlice";
+import {
+    setRemoveModalVisible,
+    setUpdateModalVisible,
+    updateAlbumAsync
+} from "../../../store/slices/albumSlice";
 
 export const UpdateAlbum: React.FC = () => {
     const dispatch = useDispatch();
@@ -23,7 +27,10 @@ export const UpdateAlbum: React.FC = () => {
             return;
         }
 
-        // @todo call api to add album
+        // @todo get the user id
+        // @ts-ignore
+        dispatch(updateAlbumAsync(albumName))
+        dispatch(setRemoveModalVisible(false));
         console.log('Update Album');
     };
 

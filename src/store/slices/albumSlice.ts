@@ -1,8 +1,10 @@
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
-import { getAlbumsByUserId, createAlbum, deleteAlbumById } from "../../api/album.api";
+import {getAlbumsByUserId, createAlbum, deleteAlbumById, updateAlbums, shareAlbums} from "../../api/album.api";
+import {AlbumSharing, Album} from "../../types/Albums";
 
 interface AlbumState {
     albumList: any,
+    id: number | null,
     selectedAlbum: number[],
     isAddModalVisible: boolean,
     isUpdateModalVisible: boolean,
@@ -15,6 +17,7 @@ interface AlbumState {
 
 const initialState: AlbumState = {
     albumList: [],
+    id: null,
     selectedAlbum: [],
     isAddModalVisible: false,
     isUpdateModalVisible: false,
@@ -36,6 +39,27 @@ export const createAlbumAsync = createAsyncThunk(
     'album/createAlbum',
     async (name: string) => {
         return await createAlbum(name);
+    }
+);
+export const updateAlbumAsync = createAsyncThunk(
+    'album/updateAlbum',
+    async (name: string) => {
+        return await updateAlbums(name,9);
+    }
+);
+export const shareAlbumAsync = createAsyncThunk(
+    'album/shareAlbum',
+        async ({ email = null, emailDel = null, albumId }: AlbumSharing, { rejectWithValue }) => {
+            console.log('sharing')
+            try {
+                console.log(email, emailDel, albumId)
+                const response = await shareAlbums(email, emailDel, albumId);
+                console.log(response)
+                return response;
+            } catch (error: any) {
+                alert(error.response.data);
+                return rejectWithValue(error.response.data);
+            }
     }
 );
 
@@ -111,6 +135,46 @@ export const albumSlice = createSlice({
             state.success = false;
             state.error = payload as string | null;
         });
+        builder
+            .addCase(shareAlbumAsync.pending, (state) => {
+            state.loading = true;
+            });
+        builder.addCase(shareAlbumAsync.fulfilled, (state, {payload}) => {
+            state.albumList = state.albumList.map((album: Album) => {
+                if (album.id === payload.id) {
+                    console.log(album)
+                    return {...album, shared_to: Array.isArray(payload.shared_to) ? payload.shared_to : []};
+                }
+                return album;
+            });
+            state.loading = false;
+            state.success = true;
+        });
+        builder.addCase(shareAlbumAsync.rejected, (state, {payload}) => {
+                state.loading = false;
+                state.success = false;
+                state.error = payload as string | null;
+            });
+        builder.addCase(updateAlbumAsync.pending, (state) => {
+            state.loading = true;
+            state.success = false;
+            state.error = null;
+        });
+        builder.addCase(updateAlbumAsync.fulfilled, (state, { payload }) => {
+            const updatedAlbum = payload;
+            const updatedAlbumIndex = state.albumList.findIndex((album: any) => album.id === updatedAlbum.id);
+            if (updatedAlbumIndex !== -1) {
+                state.albumList[updatedAlbumIndex] = updatedAlbum;
+            }
+            state.loading = false;
+            state.success = true;
+            state.error = null;
+        });
+        builder.addCase(updateAlbumAsync.rejected, (state, { payload }) => {
+            state.loading = false;
+            state.success = false;
+            state.error = payload as string | null;
+        });
         builder.addCase(deleteAlbumAsync.pending, (state) => {
             state.loading = true;
             state.success = false;
@@ -131,7 +195,6 @@ export const albumSlice = createSlice({
 });
 
 export const {
-    setAlbumList,
     setSelectAlbum,
     removeSelectAlbum,
     clearSelectAlbum,
