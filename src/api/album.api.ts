@@ -15,7 +15,7 @@ export const getAlbumsByUserId = async (userId: number) => {
     try {
         const response = await axiosInstance.get("/albums/users/" + userId);
 
-        console.log(response.data);
+        console.log('Album infos : ' + response.data);
 
         return response.data;
 
