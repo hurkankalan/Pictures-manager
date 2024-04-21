@@ -3,9 +3,10 @@ import React, {useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {setAddModalVisible} from "../../../store/slices/albumSlice";
 import {updatePhotoAsync} from "../../../store/slices/photoSlice";
+import {AppDispatch} from "../../../store/store";
 
 export const AddTag = () => {
-    const dispatch = useDispatch();
+    const dispatch: AppDispatch = useDispatch();
     const isAddModalVisible = useSelector((state: any) => state.album.isAddModalVisible);
     const selectedPhoto = useSelector((state: any) => state.photo.selectedPhoto);
     const [tag, setTag] = useState('');
@@ -20,7 +21,6 @@ export const AddTag = () => {
             return;
         }
 
-        // @ts-ignore
         dispatch(updatePhotoAsync({photoId: selectedPhoto, payload: {addLabels: [tag]}}));
         dispatch(setAddModalVisible(false));
     }

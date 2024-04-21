@@ -8,7 +8,9 @@ import {RootStackParamList} from "../../navigation/navigation.types";
 import {RouteProp} from "@react-navigation/native";
 import {NativeStackNavigationProp} from "@react-navigation/native-stack";
 import {ImageOptions} from "../../components/buttons/ImageOptions";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import {AppDispatch} from "../../store/store";
+import {listPhotosByAlbumIdAsync} from "../../store/slices/photoSlice";
 
 type AlbumScreenRouteProp = RouteProp<RootStackParamList, 'Album'>;
 type AlbumScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Album'>;
@@ -19,12 +21,20 @@ export type AlbumScreenProps = {
 };
 
 export default function AlbumScreen({route, navigation}: AlbumScreenProps) {
+  const dispatch: AppDispatch = useDispatch();
   const {album} = route.params;
-  const [photos, setPhotos] = useState<PhotoResponse[]>([])
+  const photos = useSelector((state: any) => state.photo.photoList);
   const [includeShared, setIncludeShared] = useState<boolean>(false);
   const [searchBar, setSearchBar] = useState<boolean>(false);
   const [isPhotoSelected, setIsPhotoSelected] = useState<boolean>(true);
   const selectedPhoto = useSelector((state: any) => state.photo.selectedPhoto);
+  const success = useSelector((state: any) => state.photo.deleteSuccess);
+  const loading = useSelector((state: any) => state.photo.loading);
+  const error = useSelector((state: any) => state.photo.error);
+
+  console.log('success state : ' + success);
+  console.log('loading state : ' + loading);
+  console.log('error state : ' + error);
 
   useEffect(() => {
     navigation.setOptions({
@@ -37,12 +47,10 @@ export default function AlbumScreen({route, navigation}: AlbumScreenProps) {
   }, [navigation, searchBar]);
 
   useEffect(() => {
-    if (!isNaN(album?.id)) {
-      console.log(album.id);
-      listPhotosByAlbumId(album.id)
-        .then(listing => setPhotos(listing.photos));
+    if (success || album) {
+        dispatch(listPhotosByAlbumIdAsync(album.id));
     }
-  }, [album]);
+  }, [success, album, dispatch]);
 
   useEffect(() => {
     setIsPhotoSelected(!isPhotoSelected);

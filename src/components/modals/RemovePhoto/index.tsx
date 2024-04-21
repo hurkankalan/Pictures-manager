@@ -8,16 +8,17 @@ import {useDispatch, useSelector} from "react-redux";
 import {clearSelectAlbum, deleteAlbumAsync, setRemoveModalVisible} from "../../../store/slices/albumSlice";
 import {PrimaryTextStyle} from "../../texts/PrimaryText/style";
 import {AppDispatch} from "../../../store/store";
+import {clearSelectPhoto, deletePhotoAsync} from "../../../store/slices/photoSlice";
 
-export const RemoveAlbum: React.FC = () => {
+export const RemovePhoto: React.FC = () => {
     const dispatch: AppDispatch = useDispatch();
     const modalVisible = useSelector((state: any) => state.album.isRemoveModalVisible);
-    const selectedAlbums = useSelector((state: any) => state.album.selectedAlbum);
+    const selectedPhoto = useSelector((state: any) => state.photo.selectedPhoto);
 
-    const handleRemoveAlbum = async () => {
-        dispatch(deleteAlbumAsync(selectedAlbums))
+    const handleRemovePhoto = async () => {
+        dispatch(deletePhotoAsync(selectedPhoto));
         dispatch(setRemoveModalVisible(false));
-        dispatch(clearSelectAlbum());
+        dispatch(clearSelectPhoto());
     };
 
     const closeModal = () => {
@@ -35,15 +36,15 @@ export const RemoveAlbum: React.FC = () => {
                 <View style={{flex: 1}}>
                     <TouchableWithoutFeedback onPress={(event) => event.stopPropagation()}>
                         <ModalContainerStyle>
-                            <PrimaryTitle>Delete Album</PrimaryTitle>
+                            <PrimaryTitle>Delete Photo</PrimaryTitle>
                             <PrimaryTextStyle textColor={'red'}>
-                                Are you sure you want to delete this album?
+                                Are you sure you want to delete this photo?
                             </PrimaryTextStyle>
                             <AlbumImageStyle
                                 source={require("../../../../assets/images/album_icon.png")}
                             />
                             <PrimaryButton
-                                onPress={() => handleRemoveAlbum()}
+                                onPress={() => handleRemovePhoto()}
                                 text={'Yes'}
                             />
                             <PrimaryButton
@@ -58,4 +59,4 @@ export const RemoveAlbum: React.FC = () => {
     );
 }
 
-export default RemoveAlbum;
+export default RemovePhoto;
