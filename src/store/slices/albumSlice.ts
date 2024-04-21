@@ -73,8 +73,11 @@ export const shareAlbumAsync = createAsyncThunk(
     'album/shareAlbum',
     async ({email = null, emailDel = null, albumId}: AlbumSharing, {rejectWithValue}) => {
         try {
-            console.log(email, emailDel, albumId)
             const response = await shareAlbums(email, emailDel, albumId);
+            if (!response){
+                alert(ERROR_MESSAGE);
+                return rejectWithValue(ERROR_MESSAGE);
+            }
             if (Array.isArray(response) && response.length === 0) {
                 alert(ERROR_MESSAGE);
                 return rejectWithValue(ERROR_MESSAGE);
@@ -167,8 +170,14 @@ export const albumSlice = createSlice({
         builder.addCase(shareAlbumAsync.fulfilled, (state, {payload}) => {
             state.albumList = state.albumList.map((album: Album) => {
                 if (album.id === payload.id) {
-                    console.log(album)
-                    return {...album, shared_to: Array.isArray(payload.shared_to) ? payload.shared_to : []};
+                    //return {...album, shared_to: Array.isArray(payload.shared_to) ? payload.shared_to : []};
+                    const oldSharedTo = album.shared_to || [];
+                    const newSharedTo = Array.isArray(payload.shared_to) ? payload.shared_to : [];
+                    const hasChanges = JSON.stringify(oldSharedTo) !== JSON.stringify(newSharedTo);
+                    if (!hasChanges) {
+                        alert('No changes were made: Wrong shared adress');
+                    }
+                    return { ...album, shared_to: newSharedTo };
                 }
                 return album;
             });

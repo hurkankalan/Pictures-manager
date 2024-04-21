@@ -8,7 +8,6 @@ import {ManageError} from "../../texts/PrimaryText";
 import PrimaryButton from "../../buttons/PrimaryButton";
 import {useDispatch, useSelector} from "react-redux";
 import {
-    setRemoveModalVisible,
     setUpdateModalVisible,
     updateAlbumAsync
 } from "../../../store/slices/albumSlice";
@@ -22,16 +21,22 @@ export const UpdateAlbum: React.FC = () => {
     const [errorMessage, setErrorMessage] = useState('');
     const selectedAlbums = useSelector((state: any) => state.album.selectedAlbum);
 
+
     const handleUpdateAlbum = () => {
         if (albumName === '') {
             setError(true);
             setErrorMessage('Album name is required');
             return;
         }
-
+        if (selectedAlbums && selectedAlbums.length > 0) {
+            selectedAlbums.forEach((albumId:number) => {
+                dispatch(updateAlbumAsync({ albumId, name: albumName }));
+            });
+            dispatch(setUpdateModalVisible(false));
+        }
+/*        if(selectedAlbums)
         dispatch(updateAlbumAsync({albumId: selectedAlbums[0], name: albumName}))
-        dispatch(setRemoveModalVisible(false));
-        console.log('Update Album');
+        dispatch(setUpdateModalVisible(false));*/
     };
 
     const closeModal = () => {
