@@ -1,52 +1,55 @@
-import React, {useState} from "react";
-import {Modal, TouchableWithoutFeedback, View} from 'react-native';
-import {ModalContainerStyle} from "./style";
-import {FormInputStyle} from "../../inputs/PrimaryInput/style";
-import PrimaryButton from "../../buttons/PrimaryButton";
-import {AlbumImageStyle} from "../../buttons/Album/style";
+import React, { useState } from 'react';
+import {Modal, TouchableWithoutFeedback, View} from "react-native";
+import {ModalContainerStyle} from "../AddAlbum/style";
 import {PrimaryTitle} from "../../texts/PrimaryTitle/style";
+import {AlbumImageStyle} from "../../buttons/Album/style";
+import {FormInputStyle} from "../../inputs/PrimaryInput/style";
 import {ManageError} from "../../texts/PrimaryText";
+import PrimaryButton from "../../buttons/PrimaryButton";
 import {useDispatch, useSelector} from "react-redux";
-import {createAlbumAsync, setAddModalVisible} from "../../../store/slices/albumSlice";
+import {
+    setRemoveModalVisible,
+    setUpdateModalVisible,
+    updateAlbumAsync
+} from "../../../store/slices/albumSlice";
 import {AppDispatch} from "../../../store/store";
 
-function AddAlbumModal() {
+export const UpdateAlbum: React.FC = () => {
     const dispatch: AppDispatch = useDispatch();
-    const isModalVisible = useSelector((state: any) => state.album.isAddModalVisible);
+    const modalVisible = useSelector((state: any) => state.album.isUpdateModalVisible);
     const [albumName, setAlbumName] = useState('');
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
+    const selectedAlbums = useSelector((state: any) => state.album.selectedAlbum);
 
-    const handleAddAlbum = () => {
+    const handleUpdateAlbum = () => {
         if (albumName === '') {
             setError(true);
             setErrorMessage('Album name is required');
             return;
         }
-        try {
-            dispatch(createAlbumAsync(albumName));
-            dispatch(setAddModalVisible(false));
-        } catch (error) {
-            console.log(error);
-        }
+
+        dispatch(updateAlbumAsync({albumId: selectedAlbums[0], name: albumName}))
+        dispatch(setRemoveModalVisible(false));
+        console.log('Update Album');
     };
 
     const closeModal = () => {
-        dispatch(setAddModalVisible(false));
-    };
+        dispatch(setUpdateModalVisible(false));
+    }
 
     return (
         <Modal
             animationType="slide"
             transparent={true}
-            visible={isModalVisible}
+            visible={modalVisible}
             onRequestClose={() => closeModal()}
         >
             <TouchableWithoutFeedback onPress={() => closeModal()}>
                 <View style={{flex: 1}}>
                     <TouchableWithoutFeedback onPress={(event) => event.stopPropagation()}>
                         <ModalContainerStyle>
-                            <PrimaryTitle>Add Album</PrimaryTitle>
+                            <PrimaryTitle>Update Album</PrimaryTitle>
                             <AlbumImageStyle
                                 source={require("../../../../assets/images/album_icon.png")}
                             />
@@ -59,8 +62,8 @@ function AddAlbumModal() {
                                 errorMessage={errorMessage}
                             />
                             <PrimaryButton
-                                onPress={() => handleAddAlbum()}
-                                text={"Create"}
+                                onPress={() => handleUpdateAlbum()}
+                                text={'Update'}
                             />
                         </ModalContainerStyle>
                     </TouchableWithoutFeedback>
@@ -70,4 +73,4 @@ function AddAlbumModal() {
     );
 }
 
-export default AddAlbumModal;
+export default UpdateAlbum;
