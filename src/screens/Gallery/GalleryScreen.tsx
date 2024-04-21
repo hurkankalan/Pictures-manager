@@ -9,6 +9,7 @@ import {RouteProp} from "@react-navigation/native";
 import {RootStackParamList} from "../../navigation/navigation.types";
 import {NativeStackNavigationProp} from "@react-navigation/native-stack";
 import {getAlbums} from "../../store/slices/albumSlice";
+import {AppDispatch} from "../../store/store";
 
 type GalleryScreenRouteProp = RouteProp<RootStackParamList, 'GalleryHome'>;
 type GalleryScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'GalleryHome'>;
@@ -29,7 +30,7 @@ export interface DataItem {
 }
 
 export default function GalleryScreen({route, navigation}: GalleryScreenProps) {
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
   const selectedAlbum = useSelector((state: any) => state.album.selectedAlbum);
   const [isAlbumSelected, setIsAlbumSelected] = useState<boolean>(false);
   const data = useSelector((state: any) => state.album.albumList);
@@ -41,11 +42,10 @@ export default function GalleryScreen({route, navigation}: GalleryScreenProps) {
   console.log('loading : ' + loading);
 
   useEffect(() => {
-    if (!loading) {
-      // @ts-ignore
+    if (!loading && !error) {
       dispatch(getAlbums(userId));
     }
-  }, [dispatch, loading]);
+  }, [dispatch, loading, error, userId]);
 
   useEffect(() => {
     setIsAlbumSelected(selectedAlbum.length !== 0);

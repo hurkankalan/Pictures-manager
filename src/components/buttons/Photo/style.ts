@@ -5,7 +5,7 @@ interface PhotoContainerProps {
 }
 
 export const PhotoContainerStyle = styled.TouchableOpacity<PhotoContainerProps>`
-    background-color: ${({ selected }) => (selected ? 'grey' : 'transparent')};
+    border: 1px solid ${({ selected }) => (selected ? 'black' : 'transparent')};
     display: flex;
     align-content: space-between;
     justify-content: center;

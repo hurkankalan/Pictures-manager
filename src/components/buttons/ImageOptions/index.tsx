@@ -10,6 +10,7 @@ import React from "react";
 import {AddTag} from "../../modals/AddTag";
 import {useDispatch, useSelector} from "react-redux";
 import {setAddModalVisible, setRemoveModalVisible} from "../../../store/slices/albumSlice";
+import RemovePhoto from "../../modals/RemovePhoto";
 
 interface ImageOptionsProps {
     isImageSelected: boolean;
@@ -56,6 +57,9 @@ export const ImageOptions: React.FC<ImageOptionsProps> = ({ isImageSelected }: I
             </OptionsContainerStyle>
             {
                 isAddModalVisible && <AddTag />
+            }
+            {
+                isRemoveModalVisible && <RemovePhoto />
             }
         </>
     );
