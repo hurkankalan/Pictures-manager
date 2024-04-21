@@ -12,13 +12,15 @@ import {
     setUpdateModalVisible,
     updateAlbumAsync
 } from "../../../store/slices/albumSlice";
+import {AppDispatch} from "../../../store/store";
 
 export const UpdateAlbum: React.FC = () => {
-    const dispatch = useDispatch();
+    const dispatch: AppDispatch = useDispatch();
     const modalVisible = useSelector((state: any) => state.album.isUpdateModalVisible);
     const [albumName, setAlbumName] = useState('');
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
+    const selectedAlbums = useSelector((state: any) => state.album.selectedAlbum);
 
     const handleUpdateAlbum = () => {
         if (albumName === '') {
@@ -27,9 +29,7 @@ export const UpdateAlbum: React.FC = () => {
             return;
         }
 
-        // @todo get the user id
-        // @ts-ignore
-        dispatch(updateAlbumAsync(albumName))
+        dispatch(updateAlbumAsync({albumId: selectedAlbums[0], name: albumName}))
         dispatch(setRemoveModalVisible(false));
         console.log('Update Album');
     };

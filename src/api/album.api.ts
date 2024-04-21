@@ -4,7 +4,6 @@ export const createAlbum = async (name: string) => {
     const response = await axiosInstance.post("/albums",
         {
             "name": name,
-            "owner": 7
         }
     );
 
@@ -23,9 +22,9 @@ export const getAlbumsByUserId = async (userId: number) => {
         console.log(error);
     }
 }
-export const updateAlbums = async (name:string, userId: number) => {
+export const updateAlbums = async (name:string, albumId: number) => {
     try {
-        const response = await axiosInstance.put("/albums/users/" + userId,
+        const response = await axiosInstance.put("/albums/" + albumId,
             {
             "name": name,
         });
@@ -44,7 +43,7 @@ export const shareAlbums = async (newUserId: string | null = null, deleteUserId:
             "newUserId": newUserId,
             "deleteUserId": deleteUserId,
         });
-        console.log('La fin de la requete')
+        console.log('Request shareAlbums Successful: ' + JSON.stringify(response))
         return response.data;
     } catch (error) {
         console.log(error);

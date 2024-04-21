@@ -1,6 +1,10 @@
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {getAlbumsByUserId, createAlbum, deleteAlbumById, updateAlbums, shareAlbums} from "../../api/album.api";
-import {AlbumSharing, Album} from "../../types/Albums";
+import {AlbumSharing, Album, UpdateAlbum} from "../../types/Albums";
+
+function getError(caught: any) {
+    return caught?.response?.data?.reason || caught?.response?.data?.errors?.join('\n') || 'Unknown';
+}
 
 interface AlbumState {
     albumList: any,
@@ -27,6 +31,7 @@ const initialState: AlbumState = {
     success: false,
     error: null,
 };
+const ERROR_MESSAGE = 'Server returned an empty response';
 
 export const getAlbums = createAsyncThunk(
     'album/getAlbums',
@@ -41,25 +46,46 @@ export const createAlbumAsync = createAsyncThunk(
         return await createAlbum(name);
     }
 );
+
 export const updateAlbumAsync = createAsyncThunk(
     'album/updateAlbum',
-    async (name: string) => {
-        return await updateAlbums(name,9);
+    async ({name, albumId}: UpdateAlbum, {rejectWithValue}) => {
+        try {
+            if (!name || !albumId) {
+                const errorMessage = 'Error in the name or albumId';
+                return rejectWithValue(errorMessage);
+            }
+            const response = await updateAlbums(name, albumId);
+            if (Array.isArray(response) && response.length === 0) {
+                alert(ERROR_MESSAGE);
+                return rejectWithValue(ERROR_MESSAGE);
+            }
+            return response;
+        } catch (caught: any) {
+            const error = getError(caught);
+            console.error(error);
+            alert(error);
+            return rejectWithValue(error);
+        }
     }
 );
 export const shareAlbumAsync = createAsyncThunk(
     'album/shareAlbum',
-        async ({ email = null, emailDel = null, albumId }: AlbumSharing, { rejectWithValue }) => {
-            console.log('sharing')
-            try {
-                console.log(email, emailDel, albumId)
-                const response = await shareAlbums(email, emailDel, albumId);
-                console.log(response)
-                return response;
-            } catch (error: any) {
-                alert(error.response.data);
-                return rejectWithValue(error.response.data);
+    async ({email = null, emailDel = null, albumId}: AlbumSharing, {rejectWithValue}) => {
+        try {
+            console.log(email, emailDel, albumId)
+            const response = await shareAlbums(email, emailDel, albumId);
+            if (Array.isArray(response) && response.length === 0) {
+                alert(ERROR_MESSAGE);
+                return rejectWithValue(ERROR_MESSAGE);
             }
+            return response;
+        } catch (caught: any) {
+            const error = getError(caught);
+            console.error(error);
+            alert(error);
+            return rejectWithValue(error);
+        }
     }
 );
 
@@ -106,39 +132,38 @@ export const albumSlice = createSlice({
             state.success = false;
             state.error = null;
         });
-        builder.addCase(getAlbums.fulfilled, (state, { payload }) => {
+        builder.addCase(getAlbums.fulfilled, (state, {payload}) => {
             console.log('payload : ' + payload);
             state.albumList = payload;
             state.loading = false;
             state.success = true;
             state.error = null;
         });
-        builder.addCase(getAlbums.rejected, (state, { payload }) => {
+        builder.addCase(getAlbums.rejected, (state, {payload}) => {
             state.albumList = [];
             state.loading = false;
             state.success = false;
-            state.error =  payload as string | null;
+            state.error = payload as string | null;
         });
         builder.addCase(createAlbumAsync.pending, (state) => {
             state.loading = true;
             state.success = false;
             state.error = null;
         });
-        builder.addCase(createAlbumAsync.fulfilled, (state, { payload }) => {
+        builder.addCase(createAlbumAsync.fulfilled, (state, {payload}) => {
             state.albumList = [...state.albumList, payload];
             state.loading = false;
             state.success = true;
             state.error = null;
         });
-        builder.addCase(createAlbumAsync.rejected, (state, { payload }) => {
+        builder.addCase(createAlbumAsync.rejected, (state, {payload}) => {
             state.loading = false;
             state.success = false;
             state.error = payload as string | null;
         });
-        builder
-            .addCase(shareAlbumAsync.pending, (state) => {
+        builder.addCase(shareAlbumAsync.pending, (state) => {
             state.loading = true;
-            });
+        });
         builder.addCase(shareAlbumAsync.fulfilled, (state, {payload}) => {
             state.albumList = state.albumList.map((album: Album) => {
                 if (album.id === payload.id) {
@@ -151,16 +176,16 @@ export const albumSlice = createSlice({
             state.success = true;
         });
         builder.addCase(shareAlbumAsync.rejected, (state, {payload}) => {
-                state.loading = false;
-                state.success = false;
-                state.error = payload as string | null;
-            });
+            state.loading = false;
+            state.success = false;
+            state.error = payload as string | null;
+        });
         builder.addCase(updateAlbumAsync.pending, (state) => {
             state.loading = true;
             state.success = false;
             state.error = null;
         });
-        builder.addCase(updateAlbumAsync.fulfilled, (state, { payload }) => {
+        builder.addCase(updateAlbumAsync.fulfilled, (state, {payload}) => {
             const updatedAlbum = payload;
             const updatedAlbumIndex = state.albumList.findIndex((album: any) => album.id === updatedAlbum.id);
             if (updatedAlbumIndex !== -1) {
@@ -170,7 +195,7 @@ export const albumSlice = createSlice({
             state.success = true;
             state.error = null;
         });
-        builder.addCase(updateAlbumAsync.rejected, (state, { payload }) => {
+        builder.addCase(updateAlbumAsync.rejected, (state, {payload}) => {
             state.loading = false;
             state.success = false;
             state.error = payload as string | null;
@@ -180,13 +205,13 @@ export const albumSlice = createSlice({
             state.success = false;
             state.error = null;
         });
-        builder.addCase(deleteAlbumAsync.fulfilled, (state, { payload }) => {
+        builder.addCase(deleteAlbumAsync.fulfilled, (state, {payload}) => {
             state.albumList = state.albumList.filter((album: any) => !payload.includes(album.id));
             state.loading = false;
             state.success = true;
             state.error = null;
         });
-        builder.addCase(deleteAlbumAsync.rejected, (state, { payload }) => {
+        builder.addCase(deleteAlbumAsync.rejected, (state, {payload}) => {
             state.loading = false;
             state.success = false;
             state.error = payload as string | null;
