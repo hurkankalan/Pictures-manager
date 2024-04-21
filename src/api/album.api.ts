@@ -10,7 +10,7 @@ export const createAlbum = async (name: string) => {
     return response.data;
 }
 
-export const getAlbumsByUserId = async (userId: number) => {
+export const getAlbumsByUserId = async (userId: number | string) => {
     try {
         const response = await axiosInstance.get("/albums/users/" + userId);
 

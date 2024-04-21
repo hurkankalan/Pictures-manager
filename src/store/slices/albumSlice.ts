@@ -35,7 +35,7 @@ const ERROR_MESSAGE = 'Server returned an empty response';
 
 export const getAlbums = createAsyncThunk(
     'album/getAlbums',
-    async (userId: number) => {
+    async (userId: number | string) => {
         return await getAlbumsByUserId(userId);
     }
 );
