@@ -17,7 +17,6 @@ import {ManageError} from "../../texts/PrimaryText";
 import PrimaryButton from "../../buttons/PrimaryButton";
 import {useDispatch, useSelector} from "react-redux";
 import {
-    setRemoveModalVisible,
     setShareModalVisible,
     shareAlbumAsync,
 } from "../../../store/slices/albumSlice";
@@ -56,7 +55,7 @@ export const ShareAlbum: React.FC = () => {
     }, [selectedAlbums, albumList]);
     const handleDelete = (email: string) => {
         setUsers(users.filter(user => user.email !== email));
-        if (typeof selectedAlbums[0] === 'number') {  // Check if it's a single number
+        if (typeof selectedAlbums[0] === 'number') {
             dispatch(shareAlbumAsync({ emailDel: email, albumId: selectedAlbums[0] }));
             setUsers(users.filter(user => user.email !== email));
         } else {
@@ -71,8 +70,12 @@ export const ShareAlbum: React.FC = () => {
             setErrorMessage('Email is required');
             return;
         }
+        if (!selectedAlbums || (selectedAlbums.length > 1)) {
+            alert("You can Share or remove rights for only 1 album at a time");
+            dispatch(setShareModalVisible(false));
+            return;
+        }
         dispatch(shareAlbumAsync( {email: email, albumId: selectedAlbums}))
-        dispatch(setRemoveModalVisible(false));
     };
     const closeModal = () => {
         dispatch(setShareModalVisible(false));
