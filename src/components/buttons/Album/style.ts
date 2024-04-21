@@ -12,6 +12,7 @@ export const AlbumContainerStyle = styled.TouchableOpacity<AlbumContainerProps>`
     width: 100px;
     margin: 15px auto;
 `;
+
 export const AlbumImageStyle = styled.Image`
     width: 90px;
     height: 90px;
