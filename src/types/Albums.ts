@@ -7,6 +7,10 @@ interface SharedUser {
     id: number;
     email: string;
 }
+export type UpdateAlbum= {
+    name: string;
+    albumId:number;
+}
 
 export type Album = {
     id: number;

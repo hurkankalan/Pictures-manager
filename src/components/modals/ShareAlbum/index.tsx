@@ -57,7 +57,7 @@ export const ShareAlbum: React.FC = () => {
     const handleDelete = (email: string) => {
         setUsers(users.filter(user => user.email !== email));
         if (typeof selectedAlbums[0] === 'number') {  // Check if it's a single number
-            dispatch(shareAlbumAsync({ emailDel: email, albumId: selectedAlbums }));
+            dispatch(shareAlbumAsync({ emailDel: email, albumId: selectedAlbums[0] }));
             setUsers(users.filter(user => user.email !== email));
         } else {
             console.error('selectedAlbums is not a number:', selectedAlbums);
@@ -71,11 +71,7 @@ export const ShareAlbum: React.FC = () => {
             setErrorMessage('Email is required');
             return;
         }
-
-        // @todo call api to add album
-        let sharedEmail : Shared= {email};
-        // @ts-ignore
-        dispatch(shareAlbumAsync(sharedEmail))
+        dispatch(shareAlbumAsync( {email: email, albumId: selectedAlbums}))
         dispatch(setRemoveModalVisible(false));
     };
     const closeModal = () => {

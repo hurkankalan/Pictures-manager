@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {Modal, TouchableWithoutFeedback, View} from 'react-native';
-import {ModalContainerStyle, ViewStyle} from "./style";
+import {ModalContainerStyle} from "./style";
 import {FormInputStyle} from "../../inputs/PrimaryInput/style";
 import PrimaryButton from "../../buttons/PrimaryButton";
 import {AlbumImageStyle} from "../../buttons/Album/style";
@@ -8,9 +8,10 @@ import {PrimaryTitle} from "../../texts/PrimaryTitle/style";
 import {ManageError} from "../../texts/PrimaryText";
 import {useDispatch, useSelector} from "react-redux";
 import {createAlbumAsync, setAddModalVisible} from "../../../store/slices/albumSlice";
+import {AppDispatch} from "../../../store/store";
 
 function AddAlbumModal() {
-    const dispatch = useDispatch();
+    const dispatch: AppDispatch = useDispatch();
     const isModalVisible = useSelector((state: any) => state.album.isAddModalVisible);
     const [albumName, setAlbumName] = useState('');
     const [error, setError] = useState(false);
@@ -23,7 +24,6 @@ function AddAlbumModal() {
             return;
         }
         try {
-            // @ts-ignore
             dispatch(createAlbumAsync(albumName));
             dispatch(setAddModalVisible(false));
         } catch (error) {
